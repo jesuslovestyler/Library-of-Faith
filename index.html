@@ -205,9 +205,8 @@ var BOOKS = [
 ];
 
 var PREP = [
- {shelf:"Devotion & Prayer", items:["The Imitation of Christ — Thomas à Kempis"]},
- {shelf:"Puritan Comfort", items:["The Bruised Reed — Richard Sibbes"]},
- {shelf:"Pilgrims & Classics", items:["The Pilgrim's Progress, Part I — John Bunyan","“Heaven Is a World of Love” — Jonathan Edwards"]},
+ {shelf:"Catholic", items:["Confessions — St. Augustine of Hippo","The Imitation of Christ — Thomas à Kempis","Introduction to the Devout Life — St. Francis de Sales","The Interior Castle — St. Teresa of Avila"]},
+ {shelf:"Protestant", items:["The Pilgrim's Progress — John Bunyan","The Bruised Reed — Richard Sibbes","The Saints' Everlasting Rest — Richard Baxter","The Mortification of Sin — John Owen","“Heaven Is a World of Love” — Jonathan Edwards"]},
  {shelf:"Eastern Orthodox", items:["On the Incarnation — St. Athanasius of Alexandria","On the Holy Spirit — St. Basil the Great","The Divine Liturgy of St. John Chrysostom","An Exact Exposition of the Orthodox Faith — St. John of Damascus"]}
 ];
 
@@ -234,7 +233,7 @@ function renderHome(filter){
     p.items.forEach(function(it){ html+='<p>'+it+'</p>'; });
     html+='<p class="note">This shelf is being prepared.</p></div></section>';
   });
-  html+='<div class="about"><h2>About this library</h2><p>Every text here is public domain in both its edition and its translation, and the source is named on each book\'s page. Nothing here is locked away — everything may be copied and shared freely. This library belongs to the whole body of Christ — early church, Eastern Orthodox, Catholic, and Protestant treasures side by side, each labeled with its own tradition, in the hope that we all grow together into the unity of the faith.</p></div>';
+  html+='<div class="about"><h2>About this library</h2><p>Every text here is public domain in both its edition and its translation, and the source is named on each book\'s page. Nothing here is locked away — everything may be copied and shared freely. This library belongs to the whole body of Christ — early church, Eastern Orthodox, Catholic, and Protestant treasures side by side, each labeled with its own tradition, in the hope that we all grow together into the unity of the faith. Our aim is to educate and unite: that Orthodox, Catholic, and Protestant Christians might learn from one another\'s treasures and be one, as Jesus prayed.</p></div>';
   document.getElementById("app").innerHTML=html;
   document.getElementById("crumb").textContent="";
   var inp=document.getElementById("search");
