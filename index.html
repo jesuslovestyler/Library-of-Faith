@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:,">
+<title>Library of Faith</title>
+<style>
+:root{
+  --bg:#f7f3ec; --surface:#fffdf8; --surface2:#efe7d8; --ink:#2b2118; --muted:#6f6152;
+  --line:#ddd0bc; --accent:#7a2e1d; --accent-ink:#fff8f0; --gold:#9a7418; --chip:#f0e6d2;
+  --shadow:0 1px 3px rgba(60,40,10,.12);
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#171310; --surface:#221c17; --surface2:#2b231c; --ink:#efe6d8; --muted:#b8a892;
+    --line:#453829; --accent:#d98a6a; --accent-ink:#1d130c; --gold:#d9b45c; --chip:#332a20;
+    --shadow:0 1px 3px rgba(0,0,0,.5); }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Georgia,'Iowan Old Style','Times New Roman',serif;line-height:1.55}
+a{color:var(--accent)}
+.wrap{max-width:860px;margin:0 auto;padding:0 18px 48px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0 6px}
+.home-btn{display:inline-block;font-family:system-ui,-apple-system,sans-serif;font-size:15px;font-weight:600;text-decoration:none;background:var(--surface);border:1px solid var(--line);color:var(--ink);padding:8px 14px;border-radius:8px;box-shadow:var(--shadow)}
+.crumb{font-family:system-ui,sans-serif;font-size:13px;color:var(--muted)}
+h1.site{font-size:40px;line-height:1.1;margin:18px 0 6px;font-weight:700;letter-spacing:-.01em}
+.tagline{font-size:18px;color:var(--muted);margin:0 0 22px;font-style:italic}
+h2.shelf{font-family:system-ui,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:34px 0 12px;border-bottom:1px solid var(--line);padding-bottom:8px}
+.searchbox{width:100%;font-size:17px;font-family:system-ui,sans-serif;padding:13px 15px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink)}
+.searchbox:focus{outline:2px solid var(--accent);outline-offset:1px}
+.book{display:block;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:0 0 12px;box-shadow:var(--shadow)}
+.book:hover{border-color:var(--accent)}
+.book h3{margin:0 0 4px;font-size:22px}
+.book .by{color:var(--muted);font-size:15px;margin:0 0 6px}
+.book .desc{margin:0;font-size:16px}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chip{font-family:system-ui,sans-serif;font-size:12.5px;background:var(--chip);border-radius:20px;padding:3px 10px;color:var(--ink)}
+.prep{background:var(--surface2);border:1px dashed var(--line);border-radius:12px;padding:16px 20px}
+.prep p{margin:0 0 8px;font-size:16px}
+.prep p:last-child{margin-bottom:0}
+.prep .note{font-family:system-ui,sans-serif;font-size:13px;color:var(--muted)}
+.about{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-top:34px}
+.about h2{margin:0 0 8px;font-size:20px}
+.about p{margin:0;font-size:16px}
+footer{border-top:1px solid var(--line);margin-top:44px;padding-top:16px;font-family:system-ui,sans-serif;font-size:14px;color:var(--muted);text-align:center}
+.noresults{font-family:system-ui,sans-serif;color:var(--muted);padding:14px 0;display:none}
+/* doorway */
+.door h1{font-size:34px;line-height:1.15;margin:14px 0 4px}
+.door .trad{color:var(--muted);font-size:17px;margin:0 0 18px}
+.facts{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:6px 20px;margin:0 0 22px}
+.facts div{display:flex;gap:14px;padding:10px 0;border-bottom:1px solid var(--line)}
+.facts div:last-child{border-bottom:none}
+.facts dt{font-family:system-ui,sans-serif;font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--gold);flex:0 0 118px;padding-top:3px}
+.facts dd{margin:0;font-size:16px}
+.toc{list-style:none;margin:0;padding:0}
+.toc li{margin:0 0 8px}
+.toc a{display:block;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:13px 16px;text-decoration:none;color:var(--ink);font-size:17px;box-shadow:var(--shadow)}
+.toc a:hover{border-color:var(--accent)}
+.toc .n{font-family:system-ui,sans-serif;font-size:13px;color:var(--muted);display:block}
+/* reader */
+.reader{max-width:680px;margin:0 auto}
+.reader h1{font-size:30px;line-height:1.2;margin:16px 0 4px}
+.reader .chlabel{font-family:system-ui,sans-serif;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin:0 0 14px}
+.reader .body p{font-size:19.5px;line-height:1.75;margin:0 0 1.1em}
+.reader .body p.verse{margin:0 0 .65em;padding-left:1.2em;text-indent:-1.2em}
+.reader .body p.verse .vn{font-family:system-ui,sans-serif;font-size:13px;color:var(--gold);font-weight:700;margin-right:6px}
+.navrow{display:flex;justify-content:space-between;gap:10px;margin:26px 0 6px;flex-wrap:wrap}
+.navbtn{font-family:system-ui,sans-serif;font-size:15px;font-weight:600;text-decoration:none;background:var(--surface);border:1px solid var(--line);color:var(--ink);padding:10px 16px;border-radius:9px;box-shadow:var(--shadow)}
+.navbtn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.navbtn.disabled{opacity:.38;pointer-events:none}
+.backlink{font-family:system-ui,sans-serif;font-size:15px}
+.hidden{display:none!important}
+@media (max-width:520px){ h1.site{font-size:33px} .facts div{flex-direction:column;gap:2px} .reader .body p{font-size:18.5px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a class="home-btn" href="https://jesuslovestyler.com/">⌂ Home</a>
+    <span class="crumb" id="crumb"></span>
+  </div>
+  <main id="app"></main>
+  <footer>Made by Noki for Tyler. Public domain — share freely.</footer>
+</div>
+<script data-goatcounter="https://jesuslovestyler.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<script>
+var CREEDS_SOURCE = "Philip Schaff, Creeds of Christendom, with a History and Critical Notes, Vol. II (New York: Harper & Brothers, 1877). Text via the Christian Classics Ethereal Library (CCEL).";
+var DIDACHE_SOURCE = "Ante-Nicene Fathers, Vol. VII — translation edited by Alexander Roberts and James Donaldson (Buffalo: Christian Literature Publishing Co., 1886; translation first published 1885). Text via Early Christian Writings (earlychristianwritings.com), Roberts–Donaldson translation.";
+
+var BOOKS = [
+{
+  id:"apostles-creed", shelf:"Documents & Creeds", title:"The Apostles' Creed",
+  author:"The early church — Western baptismal confession", tradition:"Early church",
+  dates:"Roots in the 2nd century; received form by about the 8th century",
+  why:"The church's oldest short summary of the faith — a baptismal confession that walks through the whole gospel in a dozen lines, from creation to the life everlasting. Christians have learned it by heart for well over a thousand years.",
+  start:"Read it straight through — it takes a minute. Then read it again slowly, one article at a time.",
+  len:"1 short page · Very easy", topics:"creed confession baptism trinity early church",
+  source:CREEDS_SOURCE,
+  chapters:[{ n:1, title:"The Creed", paras:[
+    "I believe in God the Father Almighty, Maker of heaven and earth.",
+    "And in Jesus Christ, his only Son, our Lord; who was conceived by the Holy Ghost, born of the Virgin Mary; suffered under Pontius Pilate, was crucified, dead, and buried; he descended into hell; the third day he rose from the dead; he ascended into heaven, and sitteth at the right hand of God the Father Almighty; from thence he shall come to judge the quick and the dead.",
+    "I believe in the Holy Ghost; the holy catholic Church; the communion of saints; the forgiveness of sins; the resurrection of the body; and the life everlasting. Amen."
+  ]}]
+},
+{
+  id:"nicene-creed", shelf:"Documents & Creeds", title:"The Nicene Creed",
+  author:"The Councils of Nicaea (325) and Constantinople (381)", tradition:"Early church — ecumenical councils",
+  dates:"First Council of Nicaea, A.D. 325; enlarged at Constantinople, A.D. 381",
+  why:"The one creed received across East and West. Forged in the church's fight over who Jesus truly is, it confesses Christ as 'very God of very God, begotten, not made' — and it is still spoken in churches around the world every week.",
+  start:"Read it straight through, then compare it line by line with the Apostles' Creed to see what the councils added, and why.",
+  len:"1 short page · Easy", topics:"creed nicaea trinity christology council early church",
+  source:CREEDS_SOURCE,
+  chapters:[{ n:1, title:"The Creed", paras:[
+    "I believe in one God, the Father Almighty, Maker of heaven and earth, and of all things visible and invisible.",
+    "And in one Lord Jesus Christ, the only-begotten Son of God, begotten of the Father before all worlds; God of God, Light of Light, very God of very God; begotten, not made, being of one substance with the Father, by whom all things were made.",
+    "Who, for us men and for our salvation, came down from heaven, and was incarnate by the Holy Spirit of the Virgin Mary, and was made man; and was crucified also for us under Pontius Pilate; He suffered and was buried; and the third day He rose again, according to the Scriptures; and ascended into heaven, and sits on the right hand of the Father; and He shall come again, with glory, to judge the quick and the dead; whose kingdom shall have no end.",
+    "And I believe in the Holy Ghost, the Lord and Giver of Life; who proceeds from the Father and the Son; who with the Father and the Son together is worshipped and glorified; who spoke by the prophets.",
+    "And I believe one holy catholic and apostolic Church. I acknowledge one baptism for the remission of sins; and I look for the resurrection of the dead, and the life of the world to come. Amen."
+  ]}]
+},
+{
+  id:"athanasian-creed", shelf:"Documents & Creeds", title:"The Athanasian Creed",
+  author:"Traditionally ascribed to Athanasius of Alexandria", tradition:"Early church — Western (Latin) church, traditionally ascribed to Athanasius",
+  dates:"Probably 5th–6th century, in the Latin West",
+  why:"The most careful short statement the early church left on the Trinity and the incarnation — forty-four numbered lines that guard, one by one, the mystery of one God in three Persons and one Christ in two natures.",
+  start:"Read verses 3–28 for the Trinity, then verses 29–44 for the incarnation of Christ.",
+  len:"1 page, 44 numbered lines · Moderate — dense and precise", topics:"creed trinity incarnation athanasius early church",
+  source:CREEDS_SOURCE, numbered:true,
+  chapters:[{ n:1, title:"The Creed (Symbolum Quicunque)", paras:[
+    "Whosoever will be saved, before all things it is necessary that he hold the catholic faith;",
+    "Which faith except every one do keep whole and undefiled, without doubt he shall perish everlastingly.",
+    "And the catholic faith is this: That we worship one God in Trinity, and Trinity in Unity;",
+    "Neither confounding the persons nor dividing the substance.",
+    "For there is one person of the Father, another of the Son, and another of the Holy Spirit.",
+    "But the Godhead of the Father, of the Son, and of the Holy Spirit is all one, the glory equal, the majesty coeternal.",
+    "Such as the Father is, such is the Son, and such is the Holy Spirit.",
+    "The Father uncreated, the Son uncreated, and the Holy Spirit uncreated.",
+    "The Father incomprehensible, the Son incomprehensible, and the Holy Spirit incomprehensible.",
+    "The Father eternal, the Son eternal, and the Holy Spirit eternal.",
+    "And yet they are not three eternals but one eternal.",
+    "As also there are not three uncreated nor three incomprehensible, but one uncreated and one incomprehensible.",
+    "So likewise the Father is almighty, the Son almighty, and the Holy Spirit almighty.",
+    "And yet they are not three almighties, but one almighty.",
+    "So the Father is God, the Son is God, and the Holy Spirit is God;",
+    "And yet they are not three Gods, but one God.",
+    "So likewise the Father is Lord, the Son Lord, and the Holy Spirit Lord;",
+    "And yet they are not three Lords but one Lord.",
+    "For like as we are compelled by the Christian verity to acknowledge every Person by himself to be God and Lord;",
+    "So are we forbidden by the catholic religion to say; There are three Gods or three Lords.",
+    "The Father is made of none, neither created nor begotten.",
+    "The Son is of the Father alone; not made nor created, but begotten.",
+    "The Holy Spirit is of the Father and of the Son; neither made, nor created, nor begotten, but proceeding.",
+    "So there is one Father, not three Fathers; one Son, not three Sons; one Holy Spirit, not three Holy Spirits.",
+    "And in this Trinity none is afore or after another; none is greater or less than another.",
+    "But the whole three persons are coeternal, and coequal.",
+    "So that in all things, as aforesaid, the Unity in Trinity and the Trinity in Unity is to be worshipped.",
+    "He therefore that will be saved must thus think of the Trinity.",
+    "Furthermore it is necessary to everlasting salvation that he also believe rightly the incarnation of our Lord Jesus Christ.",
+    "For the right faith is that we believe and confess that our Lord Jesus Christ, the Son of God, is God and man.",
+    "God of the substance of the Father, begotten before the worlds; and man of substance of His mother, born in the world.",
+    "Perfect God and perfect man, of a reasonable soul and human flesh subsisting.",
+    "Equal to the Father as touching His Godhead, and inferior to the Father as touching His manhood.",
+    "Who, although He is God and man, yet He is not two, but one Christ.",
+    "One, not by conversion of the Godhead into flesh, but by taking of that manhood into God.",
+    "One altogether, not by confusion of substance, but by unity of person.",
+    "For as the reasonable soul and flesh is one man, so God and man is one Christ;",
+    "Who suffered for our salvation, descended into hell, rose again the third day from the dead;",
+    "He ascended into heaven, He sits on the right hand of the Father, God, Almighty;",
+    "From thence He shall come to judge the quick and the dead.",
+    "At whose coming all men shall rise again with their bodies;",
+    "and shall give account of their own works.",
+    "And they that have done good shall go into life everlasting and they that have done evil into everlasting fire.",
+    "This is the catholic faith, which except a man believe faithfully he cannot be saved."
+  ]}]
+},
+{
+  id:"didache", shelf:"Documents & Creeds", title:"The Didache",
+  author:"Anonymous — 'The Lord's Teaching Through the Twelve Apostles to the Nations'", tradition:"Early church — Apostolic Fathers",
+  dates:"Late 1st or early 2nd century A.D.",
+  why:"The earliest church manual we have outside the New Testament: how the first generations of Christians taught new believers, baptized, fasted, prayed, shared the Lord's table, and watched for the Lord's return. Short, direct, and startlingly close to the apostles' own time.",
+  start:"Start with Chapter 1, 'The Two Ways' — then Chapters 7–10 for baptism, fasting, prayer, and the Eucharist as the early church practiced them.",
+  len:"16 short chapters · Easy to moderate", topics:"didache teaching apostles early church baptism eucharist prayer two ways",
+  source:DIDACHE_SOURCE,
+  chapters:[
+   {n:1,title:"The Two Ways and the First Commandment",paras:["There are two ways, one of life and one of death, but a great difference between the two ways. The way of life, then, is this: First, you shall love God who made you; second, love your neighbor as yourself, and do not do to another what you would not want done to you. And of these sayings the teaching is this: Bless those who curse you, and pray for your enemies, and fast for those who persecute you. For what reward is there for loving those who love you? Do not the Gentiles do the same? But love those who hate you, and you shall not have an enemy. Abstain from fleshly and worldly lusts. If someone strikes your right cheek, turn to him the other also, and you shall be perfect. If someone impresses you for one mile, go with him two. If someone takes your cloak, give him also your coat. If someone takes from you what is yours, ask it not back, for indeed you are not able. Give to every one who asks you, and ask it not back; for the Father wills that to all should be given of our own blessings (free gifts). Happy is he who gives according to the commandment, for he is guiltless. Woe to him who receives; for if one receives who has need, he is guiltless; but he who receives not having need shall pay the penalty, why he received and for what. And coming into confinement, he shall be examined concerning the things which he has done, and he shall not escape from there until he pays back the last penny. And also concerning this, it has been said, Let your alms sweat in your hands, until you know to whom you should give."]},
+   {n:2,title:"The Second Commandment: Grave Sin Forbidden",paras:["And the second commandment of the Teaching; You shall not commit murder, you shall not commit adultery, you shall not commit pederasty, you shall not commit fornication, you shall not steal, you shall not practice magic, you shall not practice witchcraft, you shall not murder a child by abortion nor kill that which is born. You shall not covet the things of your neighbor, you shall not swear, you shall not bear false witness, you shall not speak evil, you shall bear no grudge. You shall not be double-minded nor double-tongued, for to be double-tongued is a snare of death. Your speech shall not be false, nor empty, but fulfilled by deed. You shall not be covetous, nor rapacious, nor a hypocrite, nor evil disposed, nor haughty. You shall not take evil counsel against your neighbor. You shall not hate any man; but some you shall reprove, and concerning some you shall pray, and some you shall love more than your own life."]},
+   {n:3,title:"Other Sins Forbidden",paras:["My child, flee from every evil thing, and from every likeness of it. Be not prone to anger, for anger leads to murder. Be neither jealous, nor quarrelsome, nor of hot temper, for out of all these murders are engendered. My child, be not a lustful one, for lust leads to fornication. Be neither a filthy talker, nor of lofty eye, for out of all these adulteries are engendered. My child, be not an observer of omens, since it leads to idolatry. Be neither an enchanter, nor an astrologer, nor a purifier, nor be willing to look at these things, for out of all these idolatry is engendered. My child, be not a liar, since a lie leads to theft. Be neither money-loving, nor vainglorious, for out of all these thefts are engendered. My child, be not a murmurer, since it leads the way to blasphemy. Be neither self-willed nor evil-minded, for out of all these blasphemies are engendered.","Rather, be meek, since the meek shall inherit the earth. Be long-suffering and pitiful and guileless and gentle and good and always trembling at the words which you have heard. You shall not exalt yourself, nor give over-confidence to your soul. Your soul shall not be joined with lofty ones, but with just and lowly ones shall it have its intercourse. Accept whatever happens to you as good, knowing that apart from God nothing comes to pass."]},
+   {n:4,title:"Various Precepts",paras:["My child, remember night and day him who speaks the word of God to you, and honor him as you do the Lord. For wherever the lordly rule is uttered, there is the Lord. And seek out day by day the faces of the saints, in order that you may rest upon their words. Do not long for division, but rather bring those who contend to peace. Judge righteously, and do not respect persons in reproving for transgressions. You shall not be undecided whether or not it shall be. Be not a stretcher forth of the hands to receive and a drawer of them back to give. If you have anything, through your hands you shall give ransom for your sins. Do not hesitate to give, nor complain when you give; for you shall know who is the good repayer of the hire. Do not turn away from him who is in want; rather, share all things with your brother, and do not say that they are your own. For if you are partakers in that which is immortal, how much more in things which are mortal? Do not remove your hand from your son or daughter; rather, teach them the fear of God from their youth. Do not enjoin anything in your bitterness upon your bondman or maidservant, who hope in the same God, lest ever they shall fear not God who is over both; for he comes not to call according to the outward appearance, but to them whom the Spirit has prepared. And you bondmen shall be subject to your masters as to a type of God, in modesty and fear. You shall hate all hypocrisy and everything which is not pleasing to the Lord. Do not in any way forsake the commandments of the Lord; but keep what you have received, neither adding thereto nor taking away therefrom. In the church you shall acknowledge your transgressions, and you shall not come near for your prayer with an evil conscience. This is the way of life."]},
+   {n:5,title:"The Way of Death",paras:["And the way of death is this: First of all it is evil and accursed: murders, adultery, lust, fornication, thefts, idolatries, magic arts, witchcrafts, rape, false witness, hypocrisy, double-heartedness, deceit, haughtiness, depravity, self-will, greediness, filthy talking, jealousy, over-confidence, loftiness, boastfulness; persecutors of the good, hating truth, loving a lie, not knowing a reward for righteousness, not cleaving to good nor to righteous judgment, watching not for that which is good, but for that which is evil; from whom meekness and endurance are far, loving vanities, pursuing revenge, not pitying a poor man, not laboring for the afflicted, not knowing Him Who made them, murderers of children, destroyers of the handiwork of God, turning away from him who is in want, afflicting him who is distressed, advocates of the rich, lawless judges of the poor, utter sinners. Be delivered, children, from all these."]},
+   {n:6,title:"Against False Teachers, and Food Offered to Idols",paras:["See that no one causes you to err from this way of the Teaching, since apart from God it teaches you. For if you are able to bear the entire yoke of the Lord, you will be perfect; but if you are not able to do this, do what you are able. And concerning food, bear what you are able; but against that which is sacrificed to idols be exceedingly careful; for it is the service of dead gods."]},
+   {n:7,title:"Concerning Baptism",paras:["And concerning baptism, baptize this way: Having first said all these things, baptize into the name of the Father, and of the Son, and of the Holy Spirit, in living water. But if you have no living water, baptize into other water; and if you cannot do so in cold water, do so in warm. But if you have neither, pour out water three times upon the head into the name of Father and Son and Holy Spirit. But before the baptism let the baptizer fast, and the baptized, and whoever else can; but you shall order the baptized to fast one or two days before."]},
+   {n:8,title:"Fasting and Prayer (the Lord's Prayer)",paras:["But let not your fasts be with the hypocrites, for they fast on the second and fifth day of the week. Rather, fast on the fourth day and the Preparation (Friday). Do not pray like the hypocrites, but rather as the Lord commanded in His Gospel, like this:","Our Father who art in heaven, hallowed be Thy name. Thy kingdom come. Thy will be done on earth, as it is in heaven. Give us today our daily (needful) bread, and forgive us our debt as we also forgive our debtors. And bring us not into temptation, but deliver us from the evil one (or, evil); for Thine is the power and the glory for ever.","Pray this three times each day."]},
+   {n:9,title:"The Eucharist",paras:["Now concerning the Eucharist, give thanks this way. First, concerning the cup:","We thank thee, our Father, for the holy vine of David Thy servant, which You madest known to us through Jesus Thy Servant; to Thee be the glory for ever.","And concerning the broken bread:","We thank Thee, our Father, for the life and knowledge which You madest known to us through Jesus Thy Servant; to Thee be the glory for ever. Even as this broken bread was scattered over the hills, and was gathered together and became one, so let Thy Church be gathered together from the ends of the earth into Thy kingdom; for Thine is the glory and the power through Jesus Christ for ever.","But let no one eat or drink of your Eucharist, unless they have been baptized into the name of the Lord; for concerning this also the Lord has said, \"Give not that which is holy to the dogs.\""]},
+   {n:10,title:"Prayer after Communion",paras:["But after you are filled, give thanks this way:","We thank Thee, holy Father, for Thy holy name which You didst cause to tabernacle in our hearts, and for the knowledge and faith and immortality, which You madest known to us through Jesus Thy Servant; to Thee be the glory for ever. Thou, Master almighty, didst create all things for Thy name's sake; You gavest food and drink to men for enjoyment, that they might give thanks to Thee; but to us You didst freely give spiritual food and drink and life eternal through Thy Servant. Before all things we thank Thee that You are mighty; to Thee be the glory for ever. Remember, Lord, Thy Church, to deliver it from all evil and to make it perfect in Thy love, and gather it from the four winds, sanctified for Thy kingdom which Thou have prepared for it; for Thine is the power and the glory for ever. Let grace come, and let this world pass away. Hosanna to the God (Son) of David! If any one is holy, let him come; if any one is not so, let him repent. Maranatha. Amen.","But permit the prophets to make Thanksgiving as much as they desire."]},
+   {n:11,title:"Concerning Teachers, Apostles, and Prophets",paras:["Whosoever, therefore, comes and teaches you all these things that have been said before, receive him. But if the teacher himself turns and teaches another doctrine to the destruction of this, hear him not. But if he teaches so as to increase righteousness and the knowledge of the Lord, receive him as the Lord. But concerning the apostles and prophets, act according to the decree of the Gospel. Let every apostle who comes to you be received as the Lord. But he shall not remain more than one day; or two days, if there's a need. But if he remains three days, he is a false prophet. And when the apostle goes away, let him take nothing but bread until he lodges. If he asks for money, he is a false prophet.","And every prophet who speaks in the Spirit you shall neither try nor judge; for every sin shall be forgiven, but this sin shall not be forgiven. But not every one who speaks in the Spirit is a prophet; but only if he holds the ways of the Lord. Therefore from their ways shall the false prophet and the prophet be known. And every prophet who orders a meal in the Spirit does not eat it, unless he is indeed a false prophet. And every prophet who teaches the truth, but does not do what he teaches, is a false prophet. And every prophet, proved true, working unto the mystery of the Church in the world, yet not teaching others to do what he himself does, shall not be judged among you, for with God he has his judgment; for so did also the ancient prophets. But whoever says in the Spirit, Give me money, or something else, you shall not listen to him. But if he tells you to give for others' sake who are in need, let no one judge him."]},
+   {n:12,title:"Reception of Christians",paras:["But receive everyone who comes in the name of the Lord, and prove and know him afterward; for you shall have understanding right and left. If he who comes is a wayfarer, assist him as far as you are able; but he shall not remain with you more than two or three days, if need be. But if he wants to stay with you, and is an artisan, let him work and eat. But if he has no trade, according to your understanding, see to it that, as a Christian, he shall not live with you idle. But if he wills not to do, he is a Christ-monger. Watch that you keep away from such."]},
+   {n:13,title:"Support of Prophets",paras:["But every true prophet who wants to live among you is worthy of his support. So also a true teacher is himself worthy, as the workman, of his support. Every first-fruit, therefore, of the products of wine-press and threshing-floor, of oxen and of sheep, you shall take and give to the prophets, for they are your high priests. But if you have no prophet, give it to the poor. If you make a batch of dough, take the first-fruit and give according to the commandment. So also when you open a jar of wine or of oil, take the first-fruit and give it to the prophets; and of money (silver) and clothing and every possession, take the first-fruit, as it may seem good to you, and give according to the commandment."]},
+   {n:14,title:"Christian Assembly on the Lord's Day",paras:["But every Lord's day gather yourselves together, and break bread, and give thanksgiving after having confessed your transgressions, that your sacrifice may be pure. But let no one who is at odds with his fellow come together with you, until they be reconciled, that your sacrifice may not be profaned. For this is that which was spoken by the Lord: \"In every place and time offer to me a pure sacrifice; for I am a great King, says the Lord, and my name is wonderful among the nations.\""]},
+   {n:15,title:"Bishops and Deacons; Christian Reproof",paras:["Appoint, therefore, for yourselves, bishops and deacons worthy of the Lord, men meek, and not lovers of money, and truthful and proved; for they also render to you the service of prophets and teachers. Therefore do not despise them, for they are your honored ones, together with the prophets and teachers.","And reprove one another, not in anger, but in peace, as you have it in the Gospel. But to anyone that acts amiss against another, let no one speak, nor let him hear anything from you until he repents. But your prayers and alms and all your deeds so do, as you have it in the Gospel of our Lord."]},
+   {n:16,title:"Watchfulness; the Coming of the Lord",paras:["Watch for your life's sake. Let not your lamps be quenched, nor your loins unloosed; but be ready, for you know not the hour in which our Lord will come. But come together often, seeking the things which are befitting to your souls: for the whole time of your faith will not profit you, if you are not made perfect in the last time. For in the last days false prophets and corrupters shall be multiplied, and the sheep shall be turned into wolves, and love shall be turned into hate; for when lawlessness increases, they shall hate and persecute and betray one another, and then shall appear the world-deceiver as Son of God, and shall do signs and wonders, and the earth shall be delivered into his hands, and he shall do iniquitous things which have never yet come to pass since the beginning. Then shall the creation of men come into the fire of trial, and many shall be made to stumble and shall perish; but those who endure in their faith shall be saved from under the curse itself. And then shall appear the signs of the truth: first, the sign of an outspreading in heaven, then the sign of the sound of the trumpet. And third, the resurrection of the dead — yet not of all, but as it is said: \"The Lord shall come and all His saints with Him.\" Then shall the world see the Lord coming upon the clouds of heaven."]}
+  ]
+}
+];
+
+var PREP = [
+ {shelf:"Devotion & Prayer", items:["The Imitation of Christ — Thomas à Kempis"]},
+ {shelf:"Puritan Comfort", items:["The Bruised Reed — Richard Sibbes"]},
+ {shelf:"Pilgrims & Classics", items:["The Pilgrim's Progress, Part I — John Bunyan","“Heaven Is a World of Love” — Jonathan Edwards"]}
+];
+
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;");}
+function byId(id){for(var i=0;i<BOOKS.length;i++)if(BOOKS[i].id===id)return BOOKS[i];return null;}
+
+function renderHome(filter){
+  var q=(filter||"").toLowerCase().trim();
+  var html='<h1 class="site">Library of Faith</h1><p class="tagline">Classic books and documents of the Christian faith, public domain, made easy to read.</p>';
+  html+='<input class="searchbox" id="search" type="search" placeholder="Search by title, author, or topic…" value="'+esc(filter||"")+'" aria-label="Search the library">';
+  html+='<div class="noresults" id="noresults">No books match that search yet.</div>';
+  var shelves=["Documents & Creeds"];
+  shelves.forEach(function(sh){
+    var books=BOOKS.filter(function(b){return b.shelf===sh;});
+    var visible=books.filter(function(b){return !q || (b.title+" "+b.author+" "+b.topics+" "+b.tradition).toLowerCase().indexOf(q)>-1;});
+    html+='<section data-shelf="'+sh+'"><h2 class="shelf">'+sh+'</h2>';
+    visible.forEach(function(b){
+      html+='<a class="book" href="#/book/'+b.id+'"><h3>'+b.title+'</h3><p class="by">'+b.author+'</p><p class="desc">'+b.why.split(".")[0]+'.</p><span class="meta"><span class="chip">'+b.tradition+'</span><span class="chip">'+b.len+'</span><span class="chip">'+b.chapters.length+(b.chapters.length===1?" reading":" chapters")+'</span></span></a>';
+    });
+    html+='</section>';
+  });
+  PREP.forEach(function(p){
+    html+='<section><h2 class="shelf">'+p.shelf+'</h2><div class="prep">';
+    p.items.forEach(function(it){ html+='<p>'+it+'</p>'; });
+    html+='<p class="note">This shelf is being prepared.</p></div></section>';
+  });
+  html+='<div class="about"><h2>About this library</h2><p>Every text here is public domain in both its edition and its translation, and the source is named on each book\'s page. Nothing here is locked away — everything may be copied and shared freely.</p></div>';
+  document.getElementById("app").innerHTML=html;
+  document.getElementById("crumb").textContent="";
+  var inp=document.getElementById("search");
+  inp.addEventListener("input",function(){
+    var v=inp.value; var pos=inp.selectionStart;
+    renderHome(v);
+    var n=document.getElementById("search"); n.focus(); try{n.setSelectionRange(pos,pos);}catch(e){}
+    var any=document.querySelectorAll(".book").length>0;
+    document.getElementById("noresults").style.display=any?"none":"block";
+  });
+  if(q){ var any2=document.querySelectorAll(".book").length>0; document.getElementById("noresults").style.display=any2?"none":"block"; }
+}
+
+function renderDoor(id){
+  var b=byId(id); if(!b){location.hash="#/";return;}
+  var html='<p><a class="backlink" href="#/">← Library home</a></p><div class="door"><h1>'+b.title+'</h1><p class="trad">'+b.author+'</p>';
+  html+='<dl class="facts">';
+  html+='<div><dt>Tradition</dt><dd>'+b.tradition+'</dd></div>';
+  html+='<div><dt>Dates</dt><dd>'+b.dates+'</dd></div>';
+  html+='<div><dt>Why read it</dt><dd>'+b.why+'</dd></div>';
+  html+='<div><dt>Best place to start</dt><dd>'+b.start+'</dd></div>';
+  html+='<div><dt>Length</dt><dd>'+b.len+'</dd></div>';
+  html+='<div><dt>Source</dt><dd>'+b.source+'</dd></div>';
+  html+='</dl><h2 class="shelf">Contents</h2><ol class="toc">';
+  b.chapters.forEach(function(c,i){
+    html+='<li><a href="#/read/'+b.id+'/'+c.n+'"><span class="n">'+(b.chapters.length>1?("Chapter "+c.n):"Reading")+'</span>'+c.title+'</a></li>';
+  });
+  html+='</ol></div>';
+  document.getElementById("app").innerHTML=html;
+  document.getElementById("crumb").textContent=b.title;
+  window.scrollTo(0,0);
+}
+
+function renderRead(id,num){
+  var b=byId(id); if(!b){location.hash="#/";return;}
+  var idx=-1; for(var i=0;i<b.chapters.length;i++) if(b.chapters[i].n===num) idx=i;
+  if(idx<0){location.hash="#/book/"+id;return;}
+  var c=b.chapters[idx];
+  var prev=b.chapters[idx-1], next=b.chapters[idx+1];
+  var html='<p><a class="backlink" href="#/book/'+b.id+'">← Contents — '+b.title+'</a></p><div class="reader">';
+  html+='<h1>'+b.title+'</h1><p class="chlabel">'+(b.chapters.length>1?("Chapter "+c.n+" · "):"")+c.title+'</p><div class="body">';
+  c.paras.forEach(function(p,i){
+    if(b.numbered){ html+='<p class="verse"><span class="vn">'+(i+1)+'.</span>'+esc(p)+'</p>'; }
+    else{ html+='<p>'+esc(p)+'</p>'; }
+  });
+  html+='</div><div class="navrow">';
+  if(prev){ html+='<a class="navbtn" href="#/read/'+b.id+'/'+prev.n+'">← Chapter '+prev.n+'</a>'; } else { html+='<span class="navbtn disabled">← Previous</span>'; }
+  html+='<a class="navbtn" href="#/book/'+b.id+'">Contents</a>';
+  if(next){ html+='<a class="navbtn primary" href="#/read/'+b.id+'/'+next.n+'">Chapter '+next.n+' →</a>'; } else { html+='<a class="navbtn primary" href="#/book/'+b.id+'">Finish ✓</a>'; }
+  html+='</div></div>';
+  document.getElementById("app").innerHTML=html;
+  document.getElementById("crumb").textContent=b.title;
+  window.scrollTo(0,0);
+}
+
+function route(){
+  var h=location.hash||"#/";
+  var m;
+  if(m=h.match(/^#\/book\/([\w-]+)$/)){ renderDoor(m[1]); }
+  else if(m=h.match(/^#\/read\/([\w-]+)\/(\d+)$/)){ renderRead(m[1],parseInt(m[2],10)); }
+  else{ renderHome(""); }
+}
+window.addEventListener("hashchange",route);
+route();
+</script>
+</body>
+</html>
