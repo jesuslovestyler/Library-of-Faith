@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <meta name="description" content="Classic books and documents of the Christian faith, public domain, made easy to read.">
-<meta name="library-build" content="2026-10-26.1">
+<meta name="library-build" content="2026-10-26.2">
 <meta property="og:title" content="Library of Faith">
 <meta property="og:description" content="Classic books and documents of the Christian faith, public domain, made easy to read.">
 <meta property="og:type" content="website">
@@ -131,7 +131,7 @@ html[data-dys="1"] .reader .body p{line-height:1.9;letter-spacing:.02em;word-spa
     <button type="button" class="setbtn" id="setopen" aria-haspopup="dialog">Settings</button>
   </div>
   <main id="app"></main>
-  <footer>Made by Noki for Tyler. Public domain — share freely. <span class="buildstamp">Library build 2026-10-26.1</span></footer>
+  <footer>Made by Noki for Tyler. Public domain — share freely. <span class="buildstamp">Library build 2026-10-26.2</span></footer>
 </div>
 <div id="setwrap" class="hidden">
   <div id="setbackdrop"></div>
@@ -175,6 +175,16 @@ html[data-dys="1"] .reader .body p{line-height:1.9;letter-spacing:.02em;word-spa
 <script src="assets/batch5-b.js"></script>
 <script src="assets/batch5-c.js"></script>
 <script src="assets/batch5-d.js"></script>
+<script src="assets/batch6-a.js"></script>
+<script src="assets/batch6-b.js"></script>
+<script src="assets/batch6-c.js"></script>
+<script src="assets/batch6-d.js"></script>
+<script src="assets/batch6-e.js"></script>
+<script src="assets/summa-1.js"></script>
+<script src="assets/summa-2.js"></script>
+<script src="assets/summa-3.js"></script>
+<script src="assets/summa-4.js"></script>
+<script src="assets/summa-5.js"></script>
 <script>
 var CREEDS_SOURCE = "Philip Schaff, Creeds of Christendom, with a History and Critical Notes, Vol. II (New York: Harper & Brothers, 1877). Text via the Christian Classics Ethereal Library (CCEL).";
 var DIDACHE_SOURCE = "Ante-Nicene Fathers, Vol. VII — translation edited by Alexander Roberts and James Donaldson (Buffalo: Christian Literature Publishing Co., 1886; translation first published 1885). Text via Early Christian Writings (earlychristianwritings.com), Roberts–Donaldson translation.";
@@ -331,13 +341,15 @@ var BOOKS = [
 ];
 ["BATCH4_A","BATCH4_B","BATCH4_C"].forEach(function(k){if(window[k])for(var i=0;i<window[k].length;i++)BOOKS.push(window[k][i]);});
 ["BATCH5_A","BATCH5_B","BATCH5_C","BATCH5_D"].forEach(function(k){if(window[k])for(var i=0;i<window[k].length;i++)BOOKS.push(window[k][i]);});
+["BATCH6_A","BATCH6_B","BATCH6_C","BATCH6_D","BATCH6_E"].forEach(function(k){if(window[k])for(var i=0;i<window[k].length;i++)BOOKS.push(window[k][i]);});
+if(window.SUMMA_CH_1){BOOKS.push({id:"summa-theologiae",shelf:"Catholic",title:"Summa Theologiae",author:"St. Thomas Aquinas (1225 – 1274)",tradition:"Catholic",unit:"Question",dates:"Written 1265 – 1274; English Dominican Province translation, 1920",why:"The Summa Theologiae of St. Thomas Aquinas (1225–1274) — the most famous work of theology in the Western church, left unfinished at his death in 1274. Question by question it treats of God, creation, angels, man, the moral life, law and grace, the virtues and vices, Christ, and the sacraments, each Article weighing objections before resolving them: “I answer that…” It is a mountain, but it is climbed one Question at a time, and every path is marked.",start:"Begin with the Prima Pars, Question 1 — “Whether, besides philosophy, any further doctrine is required?” — Aquinas begins by justifying the whole enterprise.",len:"611 readings — one for every Question",topics:"aquinas summa theologiae thomas scholasticism theology doctrine philosophy god sacraments virtues",source:"The Fathers of the English Dominican Province translation (Benziger Bros., 1920), via New Advent's public-domain transcription. This is the complete Summa: all 611 Questions, each as one reading with its Articles in full. The four Parts Aquinas wrote hold 512 Questions; the Supplement (99 Questions) was compiled after his death from his commentary on the Sentences of Peter Lombard.",chapters:[].concat(window.SUMMA_CH_1||[],window.SUMMA_CH_2||[],window.SUMMA_CH_3||[],window.SUMMA_CH_4||[],window.SUMMA_CH_5||[])});}
 
 var PREP = [];
 
 function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;");}
 function byId(id){for(var i=0;i<BOOKS.length;i++)if(BOOKS[i].id===id)return BOOKS[i];return null;}
 var SITE_URL = "https://jesuslovestyler.github.io/Library-of-Faith/";
-var BUILD_STAMP = "2026-10-26.1";
+var BUILD_STAMP = "2026-10-26.2";
 function flashBtn(btn,msg){ if(!btn) return; var old=btn.textContent; btn.textContent=msg; btn.disabled=true; setTimeout(function(){ btn.textContent=old; btn.disabled=false; },2400); }
 function copyLink(url,btn){
   function done(){ flashBtn(btn,"Link copied \u2713"); }
