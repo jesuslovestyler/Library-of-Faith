@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <meta name="description" content="Classic books and documents of the Christian faith, public domain, made easy to read.">
-<meta name="library-build" content="2026-10-27.7">
+<meta name="library-build" content="2026-10-27.8">
 <meta property="og:title" content="Library of Faith">
 <meta property="og:description" content="Classic books and documents of the Christian faith, public domain, made easy to read.">
 <meta property="og:type" content="website">
@@ -50,6 +50,12 @@ a{color:var(--accent)}
 h1.site{font-size:40px;line-height:1.1;margin:18px 0 6px;font-weight:700;letter-spacing:-.01em}
 .tagline{font-size:18px;color:var(--muted);margin:0 0 22px;font-style:italic}
 h2.shelf{font-family:system-ui,sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:34px 0 12px;border-bottom:1px solid var(--line);padding-bottom:8px}
+.shelfbtn{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;background:none;border:0;padding:2px 0;margin:0;font:inherit;color:inherit;letter-spacing:inherit;text-transform:inherit;text-align:left;cursor:pointer}
+.shelfbtn:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.shelfbtn-meta{display:inline-flex;align-items:center;gap:10px;white-space:nowrap}
+.shelfcount{font-size:12px;color:var(--muted);letter-spacing:.08em}
+.shelfchev{font-size:13px;color:var(--gold)}
+.shelfbody{padding-top:2px}
 .searchbox{width:100%;font-size:17px;font-family:system-ui,sans-serif;padding:13px 15px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink)}
 .searchbox:focus{outline:2px solid var(--accent);outline-offset:1px}
 .book{display:block;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:0 0 12px;box-shadow:var(--shadow)}
@@ -147,7 +153,7 @@ html[data-dys="1"] .reader .body p{line-height:1.9;letter-spacing:.02em;word-spa
     <button type="button" class="setbtn" id="setopen" aria-haspopup="dialog">Settings</button>
   </div>
   <main id="app"></main>
-  <footer>Made by Noki for Tyler. Public domain — share freely. <span class="buildstamp">Library build 2026-10-27.7</span></footer>
+  <footer>Made by Noki for Tyler. Public domain — share freely. <span class="buildstamp">Library build 2026-10-27.8</span></footer>
 </div>
 <div id="setwrap" class="hidden">
   <div id="setbackdrop"></div>
@@ -236,7 +242,7 @@ function ensureBook(id){
   return p;
 }
 var SITE_URL = "https://jesuslovestyler.github.io/Library-of-Faith/";
-var BUILD_STAMP = "2026-10-27.7";
+var BUILD_STAMP = "2026-10-27.8";
 function flashBtn(btn,msg){ if(!btn) return; var old=btn.textContent; btn.textContent=msg; btn.disabled=true; setTimeout(function(){ btn.textContent=old; btn.disabled=false; },2400); }
 function copyLink(url,btn){
   function done(){ flashBtn(btn,"Link copied \u2713"); }
@@ -267,21 +273,32 @@ function checkUpdates(){
 function chapLabel(b,c){ if(c.head) return c.head; if(c.label) return b.id==="summa-theologiae" ? "Reading "+c.n+" · "+c.label : c.label; if(b.chapters && b.chapters.length===1) return ""; if(typeof b.count==="number" && b.count===1) return ""; return (b.unit||"Chapter")+" "+c.n; }
 function countLabel(b){ var n=(typeof b.count==="number") ? b.count : b.chapters.filter(function(c){return !c.head;}).length; var u=(b.unit||"Chapter").toLowerCase(); return n+" "+(n===1?"reading":u+"s"); }
 
+/* Collapsible home shelves: each shelf's open/closed choice is remembered
+   on this device. Shelves start closed; while a search is running, a shelf
+   with matches opens for the duration of the search. */
+var SHELF_STATE={};
+try{ var shsaved=JSON.parse(localStorage.getItem("lof-shelves")||"null"); if(shsaved && typeof shsaved==="object") SHELF_STATE=shsaved; }catch(e){}
+function saveShelfState(){ try{ localStorage.setItem("lof-shelves",JSON.stringify(SHELF_STATE)); }catch(e){} }
+function shelfSlug(sh){ return sh.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,""); }
+
 function renderHome(filter){
   var q=(filter||"").toLowerCase().trim();
   var html='<h1 class="site">Library of Faith</h1><p class="tagline">Classic books and documents of the Christian faith, public domain, made easy to read.</p>';
   html+='<input class="searchbox" id="search" type="search" placeholder="Search by title, author, or topic…" value="'+esc(filter||"")+'" aria-label="Search the library">';
   html+='<div class="noresults" id="noresults">No books match that search yet.</div>';
-  html+='<p class="homerow"><button type="button" class="sharebtn" onclick="shareLibrary(this)">Share this library</button> <button type="button" class="sharebtn" id="updbtnTop" onclick="checkUpdates()">Check for updates</button><span class="updmsg" id="updmsgTop"></span></p>';
+  html+='<p class="homerow"><button type="button" class="sharebtn" onclick="shareLibrary(this)">Share this library</button> <button type="button" class="sharebtn" id="updbtnTop" onclick="checkUpdates()">Check for updates</button> <button type="button" class="sharebtn" onclick="openSettings()">Settings</button><span class="updmsg" id="updmsgTop"></span></p>';
   var shelves=["Documents & Creeds","Protestant","Catholic","Eastern Orthodox"];
   shelves.forEach(function(sh){
     var books=CATALOG.filter(function(b){return b.shelf===sh;});
     var visible=books.filter(function(b){return !q || (b.title+" "+b.author+" "+b.topics+" "+b.tradition).toLowerCase().indexOf(q)>-1;});
-    html+='<section data-shelf="'+sh+'"><h2 class="shelf">'+sh+'</h2>';
+    var open = q ? (visible.length>0) : !!SHELF_STATE[sh];
+    var slug=shelfSlug(sh);
+    html+='<section data-shelf="'+sh+'"><h2 class="shelf"><button type="button" class="shelfbtn" data-shelf="'+esc(sh)+'" aria-expanded="'+(open?"true":"false")+'" aria-controls="shelfbody-'+slug+'"><span class="shelfbtn-name">'+sh+'</span><span class="shelfbtn-meta"><span class="shelfcount">'+books.length+(books.length===1?" work":" works")+'</span><span class="shelfchev" aria-hidden="true">'+(open?"▾":"▸")+'</span></span></button></h2>';
+    html+='<div class="shelfbody" id="shelfbody-'+slug+'"'+(open?"":" hidden")+'>';
     visible.forEach(function(b){
       html+='<a class="book" href="#/book/'+b.id+'"><h3>'+b.title+'</h3><p class="by">'+b.author+'</p><p class="desc">'+b.why.split(".")[0]+'.</p><span class="meta"><span class="chip">'+b.tradition+'</span><span class="chip">'+b.len+'</span><span class="chip">'+countLabel(b)+'</span></span></a>';
     });
-    html+='</section>';
+    html+='</div></section>';
   });
   PREP.forEach(function(p){
     html+='<section><h2 class="shelf">'+p.shelf+'</h2><div class="prep">';
@@ -291,6 +308,16 @@ function renderHome(filter){
   html+='<div class="about"><h2>About this library</h2><p>Every text here is public domain in both its edition and its translation, and the source is named on each book\'s page. Nothing here is locked away — everything may be copied and shared freely. This library belongs to the whole body of Christ — early church, Eastern Orthodox, Catholic, and Protestant treasures side by side, each labeled with its own tradition, in the hope that we all grow together into the unity of the faith. Our aim is to educate and unite: that Orthodox, Catholic, and Protestant Christians might learn from one another\'s treasures and be one, as Jesus prayed.</p><p class="updrow"><button type="button" class="sharebtn" id="updbtn" onclick="checkUpdates()">Check for updates</button><span class="updmsg" id="updmsg"></span></p></div>';
   document.getElementById("app").innerHTML=html;
   document.getElementById("crumb").textContent="";
+  var shelfBtns=document.querySelectorAll(".shelfbtn");
+  for(var sbi=0;sbi<shelfBtns.length;sbi++){ shelfBtns[sbi].addEventListener("click",function(){
+    var shelfName=this.getAttribute("data-shelf");
+    var shelfBody=document.getElementById(this.getAttribute("aria-controls"));
+    var nowOpen=this.getAttribute("aria-expanded")!=="true";
+    this.setAttribute("aria-expanded",nowOpen?"true":"false");
+    var chev=this.querySelector(".shelfchev"); if(chev) chev.textContent=nowOpen?"▾":"▸";
+    if(shelfBody) shelfBody.hidden=!nowOpen;
+    SHELF_STATE[shelfName]=nowOpen; saveShelfState();
+  }); }
   var inp=document.getElementById("search");
   inp.addEventListener("input",function(){
     var v=inp.value; var pos=inp.selectionStart;
