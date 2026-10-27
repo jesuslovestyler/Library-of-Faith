@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <meta name="description" content="Classic books and documents of the Christian faith, public domain, made easy to read.">
-<meta name="library-build" content="2026-10-27.8">
+<meta name="library-build" content="2026-10-27.9">
 <meta property="og:title" content="Library of Faith">
 <meta property="og:description" content="Classic books and documents of the Christian faith, public domain, made easy to read.">
 <meta property="og:type" content="website">
@@ -104,9 +104,13 @@ footer{border-top:1px solid var(--line);margin-top:44px;padding-top:16px;font-fa
 
 .sharebtn{font-family:system-ui,-apple-system,sans-serif;font-size:15px;font-weight:600;background:var(--surface);border:1px solid var(--line);color:var(--ink);padding:8px 14px;border-radius:8px;box-shadow:var(--shadow);cursor:pointer}.sharebtn:disabled{opacity:.6;cursor:default}button.navbtn{font-family:inherit;font-size:inherit;background:var(--surface);cursor:pointer}.homerow{margin:0 0 18px}.updrow{margin:16px 0 0}.updmsg{font-family:system-ui,sans-serif;font-size:14px;color:var(--muted);margin-left:8px}.buildstamp{display:block;margin-top:4px;font-size:12px;color:var(--muted);opacity:.8}
 /* reading settings: themes, text size, dyslexia-friendly font, settings sheet */
+html[data-theme="light"]{--bg:#f7f3ec;--surface:#fffdf8;--surface2:#efe7d8;--ink:#2b2118;--muted:#6f6152;--line:#ddd0bc;--accent:#7a2e1d;--accent-ink:#fff8f0;--gold:#9a7418;--chip:#f0e6d2;--shadow:0 1px 3px rgba(60,40,10,.12)}
+html[data-theme="dark"]{--bg:#171310;--surface:#221c17;--surface2:#2b231c;--ink:#efe6d8;--muted:#b8a892;--line:#453829;--accent:#d98a6a;--accent-ink:#1d130c;--gold:#d9b45c;--chip:#332a20;--shadow:0 1px 3px rgba(0,0,0,.5)}
+html[data-theme="sepia"]{--bg:#f1e6cf;--surface:#faf2dd;--surface2:#e9dcbd;--ink:#3d2c17;--muted:#7d6748;--line:#d9c69c;--accent:#8a4b16;--accent-ink:#fdf6e3;--gold:#96690f;--chip:#ecdfc0;--shadow:0 1px 3px rgba(90,60,10,.15)}
 /* personal library themes: named palettes that recolor the whole app.
-   They sit beneath the reading themes below, so an explicit Light/Dark/Sepia
-   reading theme still applies exactly as before whenever one is chosen. */
+   These rules come after the reading themes above, and the settings
+   handlers hand control back and forth between the two groups, so
+   whichever of the two you chose last is the one you see. */
 html[data-palette="parchment"]{--bg:#f3e9d2;--surface:#faf3e0;--surface2:#e9dcbc;--ink:#332619;--muted:#6d5b40;--line:#d5c193;--accent:#7c2d1e;--accent-ink:#fdf6e3;--gold:#7f5c0e;--chip:#ecdfc0;--shadow:0 1px 3px rgba(80,55,10,.14)}
 html[data-palette="midnight"]{--bg:#12151d;--surface:#1b202c;--surface2:#252b3a;--ink:#e8e4d8;--muted:#a9b0bd;--line:#39415a;--accent:#cfa64f;--accent-ink:#181510;--gold:#d9b45c;--chip:#262c3d;--shadow:0 1px 3px rgba(0,0,0,.5)}
 html[data-palette="forest"]{--bg:#eef2e4;--surface:#f8faf1;--surface2:#dde5cb;--ink:#22301e;--muted:#57634c;--line:#bfcba6;--accent:#2e5d33;--accent-ink:#f2f7ea;--gold:#7a6210;--chip:#e2ead2;--shadow:0 1px 3px rgba(35,60,20,.14)}
@@ -115,9 +119,6 @@ html[data-palette="burgundy"]{--bg:#f6ecec;--surface:#fdf8f6;--surface2:#ecdcdc;
 .pal{font-family:system-ui,sans-serif;font-size:14.5px;font-weight:600;background:var(--surface2);border:1px solid var(--line);color:var(--ink);padding:8px 13px;border-radius:9px;cursor:pointer}
 .pal.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .pal .sw{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:7px;border:1px solid rgba(0,0,0,.25);vertical-align:-1px}
-html[data-theme="light"]{--bg:#f7f3ec;--surface:#fffdf8;--surface2:#efe7d8;--ink:#2b2118;--muted:#6f6152;--line:#ddd0bc;--accent:#7a2e1d;--accent-ink:#fff8f0;--gold:#9a7418;--chip:#f0e6d2;--shadow:0 1px 3px rgba(60,40,10,.12)}
-html[data-theme="dark"]{--bg:#171310;--surface:#221c17;--surface2:#2b231c;--ink:#efe6d8;--muted:#b8a892;--line:#453829;--accent:#d98a6a;--accent-ink:#1d130c;--gold:#d9b45c;--chip:#332a20;--shadow:0 1px 3px rgba(0,0,0,.5)}
-html[data-theme="sepia"]{--bg:#f1e6cf;--surface:#faf2dd;--surface2:#e9dcbd;--ink:#3d2c17;--muted:#7d6748;--line:#d9c69c;--accent:#8a4b16;--accent-ink:#fdf6e3;--gold:#96690f;--chip:#ecdfc0;--shadow:0 1px 3px rgba(90,60,10,.15)}
 .reader .body p{font-size:var(--rfs,19.5px)}
 .facts dd{font-size:var(--afs,16px)}
 .book .desc{font-size:var(--afs,16px)}
@@ -153,7 +154,7 @@ html[data-dys="1"] .reader .body p{line-height:1.9;letter-spacing:.02em;word-spa
     <button type="button" class="setbtn" id="setopen" aria-haspopup="dialog">Settings</button>
   </div>
   <main id="app"></main>
-  <footer>Made by Noki for Tyler. Public domain — share freely. <span class="buildstamp">Library build 2026-10-27.8</span></footer>
+  <footer>Made by Noki for Tyler. Public domain — share freely. <span class="buildstamp">Library build 2026-10-27.9</span></footer>
 </div>
 <div id="setwrap" class="hidden">
   <div id="setbackdrop"></div>
@@ -196,7 +197,7 @@ html[data-dys="1"] .reader .body p{line-height:1.9;letter-spacing:.02em;word-spa
       <button type="button" class="pal" data-palette-set="ocean"><span class="sw" style="background:#14586e"></span>Ocean</button>
       <button type="button" class="pal" data-palette-set="burgundy"><span class="sw" style="background:#77203a"></span>Burgundy</button>
     </div>
-    <p class="setnote">Your own colors for the whole library — home, shelves, book pages, and the reader. The reading theme above still applies whenever you choose one.</p>
+    <p class="setnote">Your own colors for the whole library — home, shelves, book pages, and the reader. If you pick a reading theme above afterwards, that one applies instead — whichever you chose last is the one you see.</p>
   </div>
 </div>
 <script data-goatcounter="https://jesuslovestyler.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
@@ -242,7 +243,7 @@ function ensureBook(id){
   return p;
 }
 var SITE_URL = "https://jesuslovestyler.github.io/Library-of-Faith/";
-var BUILD_STAMP = "2026-10-27.8";
+var BUILD_STAMP = "2026-10-27.9";
 function flashBtn(btn,msg){ if(!btn) return; var old=btn.textContent; btn.textContent=msg; btn.disabled=true; setTimeout(function(){ btn.textContent=old; btn.disabled=false; },2400); }
 function copyLink(url,btn){
   function done(){ flashBtn(btn,"Link copied \u2713"); }
@@ -286,7 +287,7 @@ function renderHome(filter){
   var html='<h1 class="site">Library of Faith</h1><p class="tagline">Classic books and documents of the Christian faith, public domain, made easy to read.</p>';
   html+='<input class="searchbox" id="search" type="search" placeholder="Search by title, author, or topic…" value="'+esc(filter||"")+'" aria-label="Search the library">';
   html+='<div class="noresults" id="noresults">No books match that search yet.</div>';
-  html+='<p class="homerow"><button type="button" class="sharebtn" onclick="shareLibrary(this)">Share this library</button> <button type="button" class="sharebtn" id="updbtnTop" onclick="checkUpdates()">Check for updates</button> <button type="button" class="sharebtn" onclick="openSettings()">Settings</button><span class="updmsg" id="updmsgTop"></span></p>';
+  html+='<p class="homerow"><button type="button" class="sharebtn" onclick="shareLibrary(this)">Share this library</button> <button type="button" class="sharebtn" id="updbtnTop" onclick="checkUpdates()">Check for updates</button><span class="updmsg" id="updmsgTop"></span></p>';
   var shelves=["Documents & Creeds","Protestant","Catholic","Eastern Orthodox"];
   shelves.forEach(function(sh){
     var books=CATALOG.filter(function(b){return b.shelf===sh;});
@@ -503,9 +504,9 @@ document.getElementById("txtMinus").addEventListener("click",function(){ if(SET.
 document.getElementById("txtPlus").addEventListener("click",function(){ if(SET.ts<4){ SET.ts++; saveSettings(); applySettings(); } });
 document.getElementById("dysToggle").addEventListener("change",function(){ SET.dys=this.checked; saveSettings(); applySettings(); });
 var thmBtns=document.querySelectorAll(".thm");
-for(var ti=0;ti<thmBtns.length;ti++){ thmBtns[ti].addEventListener("click",function(){ SET.theme=this.getAttribute("data-theme-set"); saveSettings(); applySettings(); }); }
+for(var ti=0;ti<thmBtns.length;ti++){ thmBtns[ti].addEventListener("click",function(){ SET.theme=this.getAttribute("data-theme-set"); SET.palette="classic"; saveSettings(); applySettings(); }); }
 var palBtns=document.querySelectorAll(".pal");
-for(var pi=0;pi<palBtns.length;pi++){ palBtns[pi].addEventListener("click",function(){ SET.palette=this.getAttribute("data-palette-set"); saveSettings(); applySettings(); }); }
+for(var pi=0;pi<palBtns.length;pi++){ palBtns[pi].addEventListener("click",function(){ SET.palette=this.getAttribute("data-palette-set"); SET.theme="device"; saveSettings(); applySettings(); }); }
 if(window.speechSynthesis && window.speechSynthesis.onvoiceschanged!==undefined){ window.speechSynthesis.onvoiceschanged=refreshVoiceNote; }
 applySettings();
 
