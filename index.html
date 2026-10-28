@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <meta name="description" content="Classic books and documents of the Christian faith, public domain, made easy to read.">
-<meta name="library-build" content="2026-10-27.14">
+<meta name="library-build" content="2026-10-27.15">
 <meta property="og:title" content="Library of Faith">
 <meta property="og:description" content="Classic books and documents of the Christian faith, public domain, made easy to read.">
 <meta property="og:type" content="website">
@@ -186,6 +186,15 @@ button.navbtn.on{background:var(--accent);color:var(--accent-ink);border-color:v
 .mrnote{font-size:14px;color:var(--muted);margin:14px 0 0}
 .epigraph{margin:18px auto 0;max-width:560px;font-family:Georgia,'Iowan Old Style',serif;font-style:italic;font-size:14.5px;line-height:1.6;color:var(--muted)}
 .epigraph .epigattr{display:block;margin-top:6px;font-style:normal;font-size:12.5px;letter-spacing:.02em}
+/* quotes sampler: one favourite line from each work, tap to open the book */
+.quotesec{margin-top:34px}
+.qintro{font-size:16px;color:var(--muted);margin:0 0 14px}
+.qgroup{font-family:system-ui,sans-serif;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin:22px 0 10px}
+a.quote{display:block;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 20px 14px;margin:0 0 10px;box-shadow:var(--shadow)}
+a.quote:hover{border-color:var(--accent)}
+a.quote blockquote{margin:0;font-size:18px;line-height:1.55;font-style:italic;white-space:pre-line}
+.qattr{font-family:system-ui,sans-serif;font-size:13.5px;color:var(--muted);margin:8px 0 0}
+.qattr strong{color:var(--ink)}
 </style>
 </head>
 <body>
@@ -196,7 +205,7 @@ button.navbtn.on{background:var(--accent);color:var(--accent-ink);border-color:v
     <button type="button" class="setbtn" id="setopen" aria-haspopup="dialog">Settings</button>
   </div>
   <main id="app"></main>
-  <footer>Made by Noki for Tyler. Public domain — share freely. <span class="buildstamp">Library build 2026-10-27.14</span><blockquote class="epigraph">&ldquo;Moreover, in the Catholic Church itself, all possible care must be taken, that we hold that faith which has been believed everywhere, always, by all.&rdquo;<span class="epigattr">St. Vincent of Lérins · The Commonitory (AD 434) · Chapter 2</span></blockquote></footer>
+  <footer>Made by Noki for Tyler. Public domain — share freely. <span class="buildstamp">Library build 2026-10-27.15</span><blockquote class="epigraph">&ldquo;Moreover, in the Catholic Church itself, all possible care must be taken, that we hold that faith which has been believed everywhere, always, by all.&rdquo;<span class="epigattr">St. Vincent of Lérins · The Commonitory (AD 434) · Chapter 2</span></blockquote></footer>
 </div>
 <div id="setwrap" class="hidden">
   <div id="setbackdrop"></div>
@@ -300,7 +309,7 @@ function ensureBook(id){
   return p;
 }
 var SITE_URL = "https://jesuslovestyler.github.io/Library-of-Faith/";
-var BUILD_STAMP = "2026-10-27.14";
+var BUILD_STAMP = "2026-10-27.15";
 var LIBRARY_QR_SVG = '<svg viewBox="0 0 41 41" shape-rendering="crispEdges" role="img" aria-label="QR code for the Library of Faith web address"><rect width="41" height="41" fill="#fff"/><path d="M4 4h1v1h-1zM5 4h1v1h-1zM6 4h1v1h-1zM7 4h1v1h-1zM8 4h1v1h-1zM9 4h1v1h-1zM10 4h1v1h-1zM13 4h1v1h-1zM15 4h1v1h-1zM16 4h1v1h-1zM20 4h1v1h-1zM22 4h1v1h-1zM23 4h1v1h-1zM24 4h1v1h-1zM27 4h1v1h-1zM30 4h1v1h-1zM31 4h1v1h-1zM32 4h1v1h-1zM33 4h1v1h-1zM34 4h1v1h-1zM35 4h1v1h-1zM36 4h1v1h-1zM4 5h1v1h-1zM10 5h1v1h-1zM14 5h1v1h-1zM15 5h1v1h-1zM19 5h1v1h-1zM20 5h1v1h-1zM22 5h1v1h-1zM25 5h1v1h-1zM26 5h1v1h-1zM30 5h1v1h-1zM36 5h1v1h-1zM4 6h1v1h-1zM6 6h1v1h-1zM7 6h1v1h-1zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM15 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM19 6h1v1h-1zM20 6h1v1h-1zM24 6h1v1h-1zM25 6h1v1h-1zM26 6h1v1h-1zM27 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM33 6h1v1h-1zM34 6h1v1h-1zM36 6h1v1h-1zM4 7h1v1h-1zM6 7h1v1h-1zM7 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM15 7h1v1h-1zM19 7h1v1h-1zM22 7h1v1h-1zM23 7h1v1h-1zM25 7h1v1h-1zM26 7h1v1h-1zM28 7h1v1h-1zM30 7h1v1h-1zM32 7h1v1h-1zM33 7h1v1h-1zM34 7h1v1h-1zM36 7h1v1h-1zM4 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM8 8h1v1h-1zM10 8h1v1h-1zM12 8h1v1h-1zM13 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM19 8h1v1h-1zM20 8h1v1h-1zM24 8h1v1h-1zM27 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h1v1h-1zM33 8h1v1h-1zM34 8h1v1h-1zM36 8h1v1h-1zM4 9h1v1h-1zM10 9h1v1h-1zM12 9h1v1h-1zM16 9h1v1h-1zM17 9h1v1h-1zM23 9h1v1h-1zM25 9h1v1h-1zM26 9h1v1h-1zM28 9h1v1h-1zM30 9h1v1h-1zM36 9h1v1h-1zM4 10h1v1h-1zM5 10h1v1h-1zM6 10h1v1h-1zM7 10h1v1h-1zM8 10h1v1h-1zM9 10h1v1h-1zM10 10h1v1h-1zM12 10h1v1h-1zM14 10h1v1h-1zM16 10h1v1h-1zM18 10h1v1h-1zM20 10h1v1h-1zM22 10h1v1h-1zM24 10h1v1h-1zM26 10h1v1h-1zM28 10h1v1h-1zM30 10h1v1h-1zM31 10h1v1h-1zM32 10h1v1h-1zM33 10h1v1h-1zM34 10h1v1h-1zM35 10h1v1h-1zM36 10h1v1h-1zM12 11h1v1h-1zM13 11h1v1h-1zM20 11h1v1h-1zM23 11h1v1h-1zM24 11h1v1h-1zM25 11h1v1h-1zM27 11h1v1h-1zM4 12h1v1h-1zM6 12h1v1h-1zM7 12h1v1h-1zM8 12h1v1h-1zM9 12h1v1h-1zM10 12h1v1h-1zM13 12h1v1h-1zM17 12h1v1h-1zM20 12h1v1h-1zM21 12h1v1h-1zM23 12h1v1h-1zM26 12h1v1h-1zM30 12h1v1h-1zM31 12h1v1h-1zM32 12h1v1h-1zM33 12h1v1h-1zM34 12h1v1h-1zM4 13h1v1h-1zM5 13h1v1h-1zM7 13h1v1h-1zM12 13h1v1h-1zM15 13h1v1h-1zM16 13h1v1h-1zM17 13h1v1h-1zM20 13h1v1h-1zM21 13h1v1h-1zM23 13h1v1h-1zM24 13h1v1h-1zM25 13h1v1h-1zM27 13h1v1h-1zM30 13h1v1h-1zM31 13h1v1h-1zM33 13h1v1h-1zM34 13h1v1h-1zM36 13h1v1h-1zM4 14h1v1h-1zM5 14h1v1h-1zM8 14h1v1h-1zM10 14h1v1h-1zM11 14h1v1h-1zM13 14h1v1h-1zM14 14h1v1h-1zM16 14h1v1h-1zM17 14h1v1h-1zM18 14h1v1h-1zM19 14h1v1h-1zM21 14h1v1h-1zM24 14h1v1h-1zM26 14h1v1h-1zM32 14h1v1h-1zM34 14h1v1h-1zM5 15h1v1h-1zM6 15h1v1h-1zM7 15h1v1h-1zM12 15h1v1h-1zM17 15h1v1h-1zM19 15h1v1h-1zM21 15h1v1h-1zM22 15h1v1h-1zM25 15h1v1h-1zM29 15h1v1h-1zM32 15h1v1h-1zM33 15h1v1h-1zM34 15h1v1h-1zM35 15h1v1h-1zM36 15h1v1h-1zM4 16h1v1h-1zM6 16h1v1h-1zM10 16h1v1h-1zM11 16h1v1h-1zM13 16h1v1h-1zM15 16h1v1h-1zM18 16h1v1h-1zM20 16h1v1h-1zM23 16h1v1h-1zM26 16h1v1h-1zM28 16h1v1h-1zM29 16h1v1h-1zM31 16h1v1h-1zM32 16h1v1h-1zM33 16h1v1h-1zM35 16h1v1h-1zM36 16h1v1h-1zM4 17h1v1h-1zM7 17h1v1h-1zM8 17h1v1h-1zM9 17h1v1h-1zM11 17h1v1h-1zM16 17h1v1h-1zM17 17h1v1h-1zM19 17h1v1h-1zM22 17h1v1h-1zM27 17h1v1h-1zM29 17h1v1h-1zM30 17h1v1h-1zM33 17h1v1h-1zM35 17h1v1h-1zM36 17h1v1h-1zM5 18h1v1h-1zM7 18h1v1h-1zM8 18h1v1h-1zM9 18h1v1h-1zM10 18h1v1h-1zM13 18h1v1h-1zM16 18h1v1h-1zM17 18h1v1h-1zM18 18h1v1h-1zM19 18h1v1h-1zM20 18h1v1h-1zM21 18h1v1h-1zM22 18h1v1h-1zM24 18h1v1h-1zM26 18h1v1h-1zM29 18h1v1h-1zM30 18h1v1h-1zM31 18h1v1h-1zM32 18h1v1h-1zM33 18h1v1h-1zM35 18h1v1h-1zM8 19h1v1h-1zM11 19h1v1h-1zM12 19h1v1h-1zM13 19h1v1h-1zM14 19h1v1h-1zM16 19h1v1h-1zM18 19h1v1h-1zM19 19h1v1h-1zM22 19h1v1h-1zM23 19h1v1h-1zM24 19h1v1h-1zM25 19h1v1h-1zM26 19h1v1h-1zM27 19h1v1h-1zM29 19h1v1h-1zM30 19h1v1h-1zM31 19h1v1h-1zM33 19h1v1h-1zM34 19h1v1h-1zM6 20h1v1h-1zM9 20h1v1h-1zM10 20h1v1h-1zM11 20h1v1h-1zM12 20h1v1h-1zM16 20h1v1h-1zM18 20h1v1h-1zM19 20h1v1h-1zM21 20h1v1h-1zM22 20h1v1h-1zM23 20h1v1h-1zM24 20h1v1h-1zM26 20h1v1h-1zM27 20h1v1h-1zM29 20h1v1h-1zM31 20h1v1h-1zM32 20h1v1h-1zM34 20h1v1h-1zM36 20h1v1h-1zM4 21h1v1h-1zM5 21h1v1h-1zM6 21h1v1h-1zM7 21h1v1h-1zM8 21h1v1h-1zM9 21h1v1h-1zM12 21h1v1h-1zM14 21h1v1h-1zM15 21h1v1h-1zM20 21h1v1h-1zM22 21h1v1h-1zM23 21h1v1h-1zM24 21h1v1h-1zM25 21h1v1h-1zM26 21h1v1h-1zM27 21h1v1h-1zM30 21h1v1h-1zM31 21h1v1h-1zM33 21h1v1h-1zM34 21h1v1h-1zM36 21h1v1h-1zM5 22h1v1h-1zM6 22h1v1h-1zM10 22h1v1h-1zM13 22h1v1h-1zM16 22h1v1h-1zM17 22h1v1h-1zM19 22h1v1h-1zM22 22h1v1h-1zM25 22h1v1h-1zM31 22h1v1h-1zM32 22h1v1h-1zM34 22h1v1h-1zM35 22h1v1h-1zM4 23h1v1h-1zM5 23h1v1h-1zM8 23h1v1h-1zM9 23h1v1h-1zM11 23h1v1h-1zM13 23h1v1h-1zM14 23h1v1h-1zM17 23h1v1h-1zM18 23h1v1h-1zM19 23h1v1h-1zM20 23h1v1h-1zM24 23h1v1h-1zM25 23h1v1h-1zM26 23h1v1h-1zM27 23h1v1h-1zM28 23h1v1h-1zM30 23h1v1h-1zM31 23h1v1h-1zM32 23h1v1h-1zM33 23h1v1h-1zM34 23h1v1h-1zM35 23h1v1h-1zM4 24h1v1h-1zM6 24h1v1h-1zM9 24h1v1h-1zM10 24h1v1h-1zM12 24h1v1h-1zM13 24h1v1h-1zM14 24h1v1h-1zM18 24h1v1h-1zM19 24h1v1h-1zM22 24h1v1h-1zM26 24h1v1h-1zM28 24h1v1h-1zM29 24h1v1h-1zM32 24h1v1h-1zM33 24h1v1h-1zM36 24h1v1h-1zM4 25h1v1h-1zM7 25h1v1h-1zM8 25h1v1h-1zM9 25h1v1h-1zM11 25h1v1h-1zM18 25h1v1h-1zM19 25h1v1h-1zM20 25h1v1h-1zM21 25h1v1h-1zM23 25h1v1h-1zM25 25h1v1h-1zM27 25h1v1h-1zM29 25h1v1h-1zM30 25h1v1h-1zM33 25h1v1h-1zM36 25h1v1h-1zM4 26h1v1h-1zM6 26h1v1h-1zM8 26h1v1h-1zM9 26h1v1h-1zM10 26h1v1h-1zM12 26h1v1h-1zM13 26h1v1h-1zM16 26h1v1h-1zM21 26h1v1h-1zM26 26h1v1h-1zM30 26h1v1h-1zM31 26h1v1h-1zM32 26h1v1h-1zM34 26h1v1h-1zM35 26h1v1h-1zM4 27h1v1h-1zM7 27h1v1h-1zM11 27h1v1h-1zM12 27h1v1h-1zM13 27h1v1h-1zM14 27h1v1h-1zM17 27h1v1h-1zM20 27h1v1h-1zM22 27h1v1h-1zM25 27h1v1h-1zM30 27h1v1h-1zM31 27h1v1h-1zM33 27h1v1h-1zM34 27h1v1h-1zM35 27h1v1h-1zM36 27h1v1h-1zM4 28h1v1h-1zM7 28h1v1h-1zM10 28h1v1h-1zM11 28h1v1h-1zM12 28h1v1h-1zM13 28h1v1h-1zM16 28h1v1h-1zM20 28h1v1h-1zM21 28h1v1h-1zM23 28h1v1h-1zM24 28h1v1h-1zM26 28h1v1h-1zM27 28h1v1h-1zM28 28h1v1h-1zM29 28h1v1h-1zM30 28h1v1h-1zM31 28h1v1h-1zM32 28h1v1h-1zM12 29h1v1h-1zM17 29h1v1h-1zM18 29h1v1h-1zM20 29h1v1h-1zM21 29h1v1h-1zM22 29h1v1h-1zM23 29h1v1h-1zM24 29h1v1h-1zM27 29h1v1h-1zM28 29h1v1h-1zM32 29h1v1h-1zM34 29h1v1h-1zM36 29h1v1h-1zM4 30h1v1h-1zM5 30h1v1h-1zM6 30h1v1h-1zM7 30h1v1h-1zM8 30h1v1h-1zM9 30h1v1h-1zM10 30h1v1h-1zM14 30h1v1h-1zM17 30h1v1h-1zM18 30h1v1h-1zM19 30h1v1h-1zM20 30h1v1h-1zM21 30h1v1h-1zM24 30h1v1h-1zM25 30h1v1h-1zM27 30h1v1h-1zM28 30h1v1h-1zM30 30h1v1h-1zM32 30h1v1h-1zM34 30h1v1h-1zM35 30h1v1h-1zM4 31h1v1h-1zM10 31h1v1h-1zM12 31h1v1h-1zM13 31h1v1h-1zM17 31h1v1h-1zM18 31h1v1h-1zM19 31h1v1h-1zM21 31h1v1h-1zM22 31h1v1h-1zM23 31h1v1h-1zM25 31h1v1h-1zM26 31h1v1h-1zM27 31h1v1h-1zM28 31h1v1h-1zM32 31h1v1h-1zM33 31h1v1h-1zM34 31h1v1h-1zM36 31h1v1h-1zM4 32h1v1h-1zM6 32h1v1h-1zM7 32h1v1h-1zM8 32h1v1h-1zM10 32h1v1h-1zM12 32h1v1h-1zM13 32h1v1h-1zM16 32h1v1h-1zM17 32h1v1h-1zM20 32h1v1h-1zM26 32h1v1h-1zM28 32h1v1h-1zM29 32h1v1h-1zM30 32h1v1h-1zM31 32h1v1h-1zM32 32h1v1h-1zM33 32h1v1h-1zM35 32h1v1h-1zM36 32h1v1h-1zM4 33h1v1h-1zM6 33h1v1h-1zM7 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM12 33h1v1h-1zM13 33h1v1h-1zM16 33h1v1h-1zM18 33h1v1h-1zM19 33h1v1h-1zM22 33h1v1h-1zM23 33h1v1h-1zM24 33h1v1h-1zM25 33h1v1h-1zM26 33h1v1h-1zM27 33h1v1h-1zM28 33h1v1h-1zM29 33h1v1h-1zM32 33h1v1h-1zM35 33h1v1h-1zM36 33h1v1h-1zM4 34h1v1h-1zM6 34h1v1h-1zM7 34h1v1h-1zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h1v1h-1zM14 34h1v1h-1zM15 34h1v1h-1zM16 34h1v1h-1zM19 34h1v1h-1zM20 34h1v1h-1zM21 34h1v1h-1zM25 34h1v1h-1zM26 34h1v1h-1zM27 34h1v1h-1zM28 34h1v1h-1zM30 34h1v1h-1zM31 34h1v1h-1zM33 34h1v1h-1zM34 34h1v1h-1zM4 35h1v1h-1zM10 35h1v1h-1zM13 35h1v1h-1zM14 35h1v1h-1zM16 35h1v1h-1zM19 35h1v1h-1zM24 35h1v1h-1zM25 35h1v1h-1zM26 35h1v1h-1zM30 35h1v1h-1zM32 35h1v1h-1zM33 35h1v1h-1zM34 35h1v1h-1zM4 36h1v1h-1zM5 36h1v1h-1zM6 36h1v1h-1zM7 36h1v1h-1zM8 36h1v1h-1zM9 36h1v1h-1zM10 36h1v1h-1zM12 36h1v1h-1zM13 36h1v1h-1zM15 36h1v1h-1zM19 36h1v1h-1zM21 36h1v1h-1zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h1v1h-1zM29 36h1v1h-1zM31 36h1v1h-1zM35 36h1v1h-1z" fill="#000"/></svg>';
 function flashBtn(btn,msg){ if(!btn) return; var old=btn.textContent; btn.textContent=msg; btn.disabled=true; setTimeout(function(){ btn.textContent=old; btn.disabled=false; },2400); }
 function copyLink(url,btn){
@@ -489,6 +498,38 @@ try{ var shsaved=JSON.parse(localStorage.getItem("lof-shelves")||"null"); if(shs
 function saveShelfState(){ try{ localStorage.setItem("lof-shelves",JSON.stringify(SHELF_STATE)); }catch(e){} }
 function shelfSlug(sh){ return sh.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,""); }
 
+/* ---- quotes sampler: one favourite line from every work, lifted word for
+   word from that work's own text in this Library. The lines live in
+   assets/quotes.js and are fetched only when the section is first opened,
+   the same on-demand way the books themselves are fetched. Tapping a
+   quote opens that book's doorway. ---- */
+var LOF_QUOTES=null, LOF_QLOADING=false;
+function quotesHtml(){
+  var shelves=["Documents & Creeds","Protestant","Catholic","Eastern Orthodox"];
+  var h="";
+  shelves.forEach(function(sh){
+    var books=CATALOG.filter(function(b){ return b.shelf===sh && LOF_QUOTES[b.id]; });
+    if(!books.length) return;
+    h+='<h3 class="qgroup">'+sh+'</h3>';
+    books.forEach(function(b){
+      h+='<a class="quote" href="#/book/'+b.id+'"><blockquote>&ldquo;'+esc(LOF_QUOTES[b.id])+'&rdquo;</blockquote><p class="qattr"><strong>'+esc(b.title)+'</strong> · '+esc(b.author)+'</p></a>';
+    });
+  });
+  return h || '<p class="loading">No quotes were found.</p>';
+}
+function fillQuotes(){
+  var host=document.getElementById("quoteslist"); if(!host) return;
+  if(LOF_QUOTES){ host.innerHTML=quotesHtml(); return; }
+  if(LOF_QLOADING) return; LOF_QLOADING=true;
+  loadScript("assets/quotes.js").then(function(){
+    LOF_QUOTES=window.LOF_QUOTES||{}; LOF_QLOADING=false;
+    var h2=document.getElementById("quoteslist"); if(h2) h2.innerHTML=quotesHtml();
+  }).catch(function(){
+    LOF_QLOADING=false;
+    var h2=document.getElementById("quoteslist"); if(h2) h2.innerHTML='<p class="loading">The quotes could not be loaded just now — close and open this section to try again.</p>';
+  });
+}
+
 function renderHome(filter){
   var q=(filter||"").toLowerCase().trim();
   var html='<h1 class="site">Library of Faith</h1><p class="tagline">Classic books and documents of the Christian faith, public domain, made easy to read.</p>';
@@ -520,11 +561,16 @@ function renderHome(filter){
     html+='<p class="note">This shelf is being prepared.</p></div></section>';
   });
   html+='<div class="about"><h2>About this library</h2><p>Every text here is public domain in both its edition and its translation, and the source is named on each book\'s page. Nothing here is locked away — everything may be copied and shared freely. This library belongs to the whole body of Christ — early church, Eastern Orthodox, Catholic, and Protestant treasures side by side, each labeled with its own tradition, in the hope that we all grow together into the unity of the faith. Our aim is to educate and unite: that Orthodox, Catholic, and Protestant Christians might learn from one another\'s treasures and be one, as Jesus prayed.</p><p class="updrow"><button type="button" class="sharebtn" id="updbtn" onclick="checkUpdates()">Check for updates</button><span class="updmsg" id="updmsg"></span></p></div>';
+  if(!q){
+    var qopen=!!SHELF_STATE["Quotes"];
+    html+='<section class="quotesec"><h2 class="shelf"><button type="button" class="shelfbtn" id="quotesbtn" aria-expanded="'+(qopen?"true":"false")+'" aria-controls="quotesbody"><span class="shelfbtn-name">Quotes</span><span class="shelfbtn-meta"><span class="shelfcount">'+CATALOG.length+' works</span><span class="shelfchev">'+(qopen?"▾":"▸")+'</span></span></button></h2><div class="shelfbody" id="quotesbody"'+(qopen?"":" hidden")+'><p class="qintro">One favourite line from every book on the shelves, taken word for word from the book itself. Tap any quote to open its book and start reading.</p><div id="quoteslist"><p class="loading">Loading the quotes…</p></div></div></section>';
+  }
   document.getElementById("app").innerHTML=html;
   document.getElementById("crumb").textContent="";
   var shelfBtns=document.querySelectorAll(".shelfbtn");
   for(var sbi=0;sbi<shelfBtns.length;sbi++){ shelfBtns[sbi].addEventListener("click",function(){
     var shelfName=this.getAttribute("data-shelf");
+    if(!shelfName) return;
     var shelfBody=document.getElementById(this.getAttribute("aria-controls"));
     var nowOpen=this.getAttribute("aria-expanded")!=="true";
     this.setAttribute("aria-expanded",nowOpen?"true":"false");
@@ -532,6 +578,19 @@ function renderHome(filter){
     if(shelfBody) shelfBody.hidden=!nowOpen;
     SHELF_STATE[shelfName]=nowOpen; saveShelfState();
   }); }
+  var qbtn=document.getElementById("quotesbtn");
+  if(qbtn){
+    qbtn.addEventListener("click",function(){
+      var qbody=document.getElementById("quotesbody");
+      var qNowOpen=qbtn.getAttribute("aria-expanded")!=="true";
+      qbtn.setAttribute("aria-expanded",qNowOpen?"true":"false");
+      var qchev=qbtn.querySelector(".shelfchev"); if(qchev) qchev.textContent=qNowOpen?"▾":"▸";
+      if(qbody) qbody.hidden=!qNowOpen;
+      SHELF_STATE["Quotes"]=qNowOpen; saveShelfState();
+      if(qNowOpen) fillQuotes();
+    });
+    if(qbtn.getAttribute("aria-expanded")==="true") fillQuotes();
+  }
   var inp=document.getElementById("search");
   inp.addEventListener("input",function(){
     var v=inp.value; var pos=inp.selectionStart;
