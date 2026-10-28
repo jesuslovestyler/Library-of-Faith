@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <meta name="description" content="Classic books and documents of the Christian faith, public domain, made easy to read.">
-<meta name="library-build" content="2026-10-27.13">
+<meta name="library-build" content="2026-10-27.14">
 <meta property="og:title" content="Library of Faith">
 <meta property="og:description" content="Classic books and documents of the Christian faith, public domain, made easy to read.">
 <meta property="og:type" content="website">
@@ -152,6 +152,40 @@ html[data-dys="1"] .reader .body p{letter-spacing:.02em;word-spacing:.05em}
 .setswitch input{width:22px;height:22px;accent-color:var(--accent)}
 .loading{font-family:system-ui,sans-serif;color:var(--muted);font-size:16px;padding:22px 0}
 .loading .retry{margin-left:10px}
+/* reading progress: bookmarks, read & seen marks, completed books */
+.chip.prog{font-weight:600}
+.chip.prog.done{background:var(--accent);color:var(--accent-ink)}
+.sharebtn.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.myrbtn{text-decoration:none;display:inline-block}
+.doorprog{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:0 0 20px;box-shadow:var(--shadow)}
+.progline{margin:0;font-size:16px}
+.progbar{height:6px;background:var(--surface2);border:1px solid var(--line);border-radius:6px;overflow:hidden;margin:9px 0 2px}
+.progbar span{display:block;height:100%;background:var(--accent)}
+.progrow{margin:10px 0 0;display:flex;gap:8px;flex-wrap:wrap}
+.tocrow{display:flex;gap:8px;align-items:stretch}
+.tocrow a{flex:1;min-width:0}
+.tocbm{font-family:system-ui,sans-serif;font-size:14px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:0 12px;cursor:pointer;box-shadow:var(--shadow);color:var(--ink);white-space:nowrap}
+.tocbm.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tmark{font-family:system-ui,sans-serif;font-size:12px;font-weight:700;border-radius:12px;padding:1px 8px;margin-left:6px;white-space:nowrap}
+.tmark.rd{background:var(--accent);color:var(--accent-ink)}
+.tmark.sn{background:var(--chip);color:var(--muted)}
+.toc a.isread .n{color:var(--accent)}
+.readactions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:20px 0 0;padding-top:16px;border-top:1px solid var(--line)}
+button.navbtn.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.seenote{font-family:system-ui,sans-serif;font-size:13.5px;color:var(--muted)}
+.myreading{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:6px 20px 18px;margin:22px 0 0;box-shadow:var(--shadow)}
+.mrh{font-family:system-ui,sans-serif;font-size:14px;margin:16px 0 4px}
+.mrlist{list-style:none;margin:0;padding:0}
+.mrlist li{padding:7px 0;border-bottom:1px solid var(--line);font-size:16px}
+.mrlist li:last-child{border-bottom:none}
+.mrlist a{color:var(--ink);text-decoration:none}
+.mrlist a:hover strong{text-decoration:underline}
+.mrn{color:var(--muted);font-family:system-ui,sans-serif;font-size:13.5px;margin-left:6px}
+.mrgo{font-family:system-ui,sans-serif;font-size:14px;font-weight:600;margin-left:8px;white-space:nowrap;color:var(--accent)}
+.mrempty{font-size:15.5px;color:var(--muted)}
+.mrnote{font-size:14px;color:var(--muted);margin:14px 0 0}
+.epigraph{margin:18px auto 0;max-width:560px;font-family:Georgia,'Iowan Old Style',serif;font-style:italic;font-size:14.5px;line-height:1.6;color:var(--muted)}
+.epigraph .epigattr{display:block;margin-top:6px;font-style:normal;font-size:12.5px;letter-spacing:.02em}
 </style>
 </head>
 <body>
@@ -162,7 +196,7 @@ html[data-dys="1"] .reader .body p{letter-spacing:.02em;word-spacing:.05em}
     <button type="button" class="setbtn" id="setopen" aria-haspopup="dialog">Settings</button>
   </div>
   <main id="app"></main>
-  <footer>Made by Noki for Tyler. Public domain — share freely. <span class="buildstamp">Library build 2026-10-27.13</span></footer>
+  <footer>Made by Noki for Tyler. Public domain — share freely. <span class="buildstamp">Library build 2026-10-27.14</span><blockquote class="epigraph">&ldquo;Moreover, in the Catholic Church itself, all possible care must be taken, that we hold that faith which has been believed everywhere, always, by all.&rdquo;<span class="epigattr">St. Vincent of Lérins · The Commonitory (AD 434) · Chapter 2</span></blockquote></footer>
 </div>
 <div id="setwrap" class="hidden">
   <div id="setbackdrop"></div>
@@ -213,6 +247,14 @@ html[data-dys="1"] .reader .body p{letter-spacing:.02em;word-spacing:.05em}
       <button type="button" class="pal" data-palette-set="burgundy"><span class="sw" style="background:#77203a"></span>Burgundy</button>
     </div>
     <p class="setnote">Your own colors for the whole library — home, shelves, book pages, and the reader. If you pick a reading theme above afterwards, that one applies instead — whichever you chose last is the one you see.</p>
+    <h3>My reading</h3>
+    <p class="setnote">Your bookmarks, the readings you have finished, and your completed books are kept on this device only — nothing leaves your phone. Save a backup copy, and you can restore it here if this browser is ever cleared, or on another device. Restoring adds the backup to what is already here; nothing you have is removed.</p>
+    <div class="setrow">
+      <button type="button" class="setbtn2" id="progExport">Save a backup</button>
+      <button type="button" class="setbtn2" id="progImportBtn">Restore a backup</button>
+      <input type="file" id="progFile" accept=".json,application/json" class="hidden">
+    </div>
+    <p class="setnote hidden" id="progMsg" role="status"></p>
   </div>
 </div>
 <script data-goatcounter="https://jesuslovestyler.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
@@ -258,7 +300,7 @@ function ensureBook(id){
   return p;
 }
 var SITE_URL = "https://jesuslovestyler.github.io/Library-of-Faith/";
-var BUILD_STAMP = "2026-10-27.13";
+var BUILD_STAMP = "2026-10-27.14";
 var LIBRARY_QR_SVG = '<svg viewBox="0 0 41 41" shape-rendering="crispEdges" role="img" aria-label="QR code for the Library of Faith web address"><rect width="41" height="41" fill="#fff"/><path d="M4 4h1v1h-1zM5 4h1v1h-1zM6 4h1v1h-1zM7 4h1v1h-1zM8 4h1v1h-1zM9 4h1v1h-1zM10 4h1v1h-1zM13 4h1v1h-1zM15 4h1v1h-1zM16 4h1v1h-1zM20 4h1v1h-1zM22 4h1v1h-1zM23 4h1v1h-1zM24 4h1v1h-1zM27 4h1v1h-1zM30 4h1v1h-1zM31 4h1v1h-1zM32 4h1v1h-1zM33 4h1v1h-1zM34 4h1v1h-1zM35 4h1v1h-1zM36 4h1v1h-1zM4 5h1v1h-1zM10 5h1v1h-1zM14 5h1v1h-1zM15 5h1v1h-1zM19 5h1v1h-1zM20 5h1v1h-1zM22 5h1v1h-1zM25 5h1v1h-1zM26 5h1v1h-1zM30 5h1v1h-1zM36 5h1v1h-1zM4 6h1v1h-1zM6 6h1v1h-1zM7 6h1v1h-1zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM15 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM19 6h1v1h-1zM20 6h1v1h-1zM24 6h1v1h-1zM25 6h1v1h-1zM26 6h1v1h-1zM27 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM33 6h1v1h-1zM34 6h1v1h-1zM36 6h1v1h-1zM4 7h1v1h-1zM6 7h1v1h-1zM7 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM15 7h1v1h-1zM19 7h1v1h-1zM22 7h1v1h-1zM23 7h1v1h-1zM25 7h1v1h-1zM26 7h1v1h-1zM28 7h1v1h-1zM30 7h1v1h-1zM32 7h1v1h-1zM33 7h1v1h-1zM34 7h1v1h-1zM36 7h1v1h-1zM4 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM8 8h1v1h-1zM10 8h1v1h-1zM12 8h1v1h-1zM13 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM19 8h1v1h-1zM20 8h1v1h-1zM24 8h1v1h-1zM27 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h1v1h-1zM33 8h1v1h-1zM34 8h1v1h-1zM36 8h1v1h-1zM4 9h1v1h-1zM10 9h1v1h-1zM12 9h1v1h-1zM16 9h1v1h-1zM17 9h1v1h-1zM23 9h1v1h-1zM25 9h1v1h-1zM26 9h1v1h-1zM28 9h1v1h-1zM30 9h1v1h-1zM36 9h1v1h-1zM4 10h1v1h-1zM5 10h1v1h-1zM6 10h1v1h-1zM7 10h1v1h-1zM8 10h1v1h-1zM9 10h1v1h-1zM10 10h1v1h-1zM12 10h1v1h-1zM14 10h1v1h-1zM16 10h1v1h-1zM18 10h1v1h-1zM20 10h1v1h-1zM22 10h1v1h-1zM24 10h1v1h-1zM26 10h1v1h-1zM28 10h1v1h-1zM30 10h1v1h-1zM31 10h1v1h-1zM32 10h1v1h-1zM33 10h1v1h-1zM34 10h1v1h-1zM35 10h1v1h-1zM36 10h1v1h-1zM12 11h1v1h-1zM13 11h1v1h-1zM20 11h1v1h-1zM23 11h1v1h-1zM24 11h1v1h-1zM25 11h1v1h-1zM27 11h1v1h-1zM4 12h1v1h-1zM6 12h1v1h-1zM7 12h1v1h-1zM8 12h1v1h-1zM9 12h1v1h-1zM10 12h1v1h-1zM13 12h1v1h-1zM17 12h1v1h-1zM20 12h1v1h-1zM21 12h1v1h-1zM23 12h1v1h-1zM26 12h1v1h-1zM30 12h1v1h-1zM31 12h1v1h-1zM32 12h1v1h-1zM33 12h1v1h-1zM34 12h1v1h-1zM4 13h1v1h-1zM5 13h1v1h-1zM7 13h1v1h-1zM12 13h1v1h-1zM15 13h1v1h-1zM16 13h1v1h-1zM17 13h1v1h-1zM20 13h1v1h-1zM21 13h1v1h-1zM23 13h1v1h-1zM24 13h1v1h-1zM25 13h1v1h-1zM27 13h1v1h-1zM30 13h1v1h-1zM31 13h1v1h-1zM33 13h1v1h-1zM34 13h1v1h-1zM36 13h1v1h-1zM4 14h1v1h-1zM5 14h1v1h-1zM8 14h1v1h-1zM10 14h1v1h-1zM11 14h1v1h-1zM13 14h1v1h-1zM14 14h1v1h-1zM16 14h1v1h-1zM17 14h1v1h-1zM18 14h1v1h-1zM19 14h1v1h-1zM21 14h1v1h-1zM24 14h1v1h-1zM26 14h1v1h-1zM32 14h1v1h-1zM34 14h1v1h-1zM5 15h1v1h-1zM6 15h1v1h-1zM7 15h1v1h-1zM12 15h1v1h-1zM17 15h1v1h-1zM19 15h1v1h-1zM21 15h1v1h-1zM22 15h1v1h-1zM25 15h1v1h-1zM29 15h1v1h-1zM32 15h1v1h-1zM33 15h1v1h-1zM34 15h1v1h-1zM35 15h1v1h-1zM36 15h1v1h-1zM4 16h1v1h-1zM6 16h1v1h-1zM10 16h1v1h-1zM11 16h1v1h-1zM13 16h1v1h-1zM15 16h1v1h-1zM18 16h1v1h-1zM20 16h1v1h-1zM23 16h1v1h-1zM26 16h1v1h-1zM28 16h1v1h-1zM29 16h1v1h-1zM31 16h1v1h-1zM32 16h1v1h-1zM33 16h1v1h-1zM35 16h1v1h-1zM36 16h1v1h-1zM4 17h1v1h-1zM7 17h1v1h-1zM8 17h1v1h-1zM9 17h1v1h-1zM11 17h1v1h-1zM16 17h1v1h-1zM17 17h1v1h-1zM19 17h1v1h-1zM22 17h1v1h-1zM27 17h1v1h-1zM29 17h1v1h-1zM30 17h1v1h-1zM33 17h1v1h-1zM35 17h1v1h-1zM36 17h1v1h-1zM5 18h1v1h-1zM7 18h1v1h-1zM8 18h1v1h-1zM9 18h1v1h-1zM10 18h1v1h-1zM13 18h1v1h-1zM16 18h1v1h-1zM17 18h1v1h-1zM18 18h1v1h-1zM19 18h1v1h-1zM20 18h1v1h-1zM21 18h1v1h-1zM22 18h1v1h-1zM24 18h1v1h-1zM26 18h1v1h-1zM29 18h1v1h-1zM30 18h1v1h-1zM31 18h1v1h-1zM32 18h1v1h-1zM33 18h1v1h-1zM35 18h1v1h-1zM8 19h1v1h-1zM11 19h1v1h-1zM12 19h1v1h-1zM13 19h1v1h-1zM14 19h1v1h-1zM16 19h1v1h-1zM18 19h1v1h-1zM19 19h1v1h-1zM22 19h1v1h-1zM23 19h1v1h-1zM24 19h1v1h-1zM25 19h1v1h-1zM26 19h1v1h-1zM27 19h1v1h-1zM29 19h1v1h-1zM30 19h1v1h-1zM31 19h1v1h-1zM33 19h1v1h-1zM34 19h1v1h-1zM6 20h1v1h-1zM9 20h1v1h-1zM10 20h1v1h-1zM11 20h1v1h-1zM12 20h1v1h-1zM16 20h1v1h-1zM18 20h1v1h-1zM19 20h1v1h-1zM21 20h1v1h-1zM22 20h1v1h-1zM23 20h1v1h-1zM24 20h1v1h-1zM26 20h1v1h-1zM27 20h1v1h-1zM29 20h1v1h-1zM31 20h1v1h-1zM32 20h1v1h-1zM34 20h1v1h-1zM36 20h1v1h-1zM4 21h1v1h-1zM5 21h1v1h-1zM6 21h1v1h-1zM7 21h1v1h-1zM8 21h1v1h-1zM9 21h1v1h-1zM12 21h1v1h-1zM14 21h1v1h-1zM15 21h1v1h-1zM20 21h1v1h-1zM22 21h1v1h-1zM23 21h1v1h-1zM24 21h1v1h-1zM25 21h1v1h-1zM26 21h1v1h-1zM27 21h1v1h-1zM30 21h1v1h-1zM31 21h1v1h-1zM33 21h1v1h-1zM34 21h1v1h-1zM36 21h1v1h-1zM5 22h1v1h-1zM6 22h1v1h-1zM10 22h1v1h-1zM13 22h1v1h-1zM16 22h1v1h-1zM17 22h1v1h-1zM19 22h1v1h-1zM22 22h1v1h-1zM25 22h1v1h-1zM31 22h1v1h-1zM32 22h1v1h-1zM34 22h1v1h-1zM35 22h1v1h-1zM4 23h1v1h-1zM5 23h1v1h-1zM8 23h1v1h-1zM9 23h1v1h-1zM11 23h1v1h-1zM13 23h1v1h-1zM14 23h1v1h-1zM17 23h1v1h-1zM18 23h1v1h-1zM19 23h1v1h-1zM20 23h1v1h-1zM24 23h1v1h-1zM25 23h1v1h-1zM26 23h1v1h-1zM27 23h1v1h-1zM28 23h1v1h-1zM30 23h1v1h-1zM31 23h1v1h-1zM32 23h1v1h-1zM33 23h1v1h-1zM34 23h1v1h-1zM35 23h1v1h-1zM4 24h1v1h-1zM6 24h1v1h-1zM9 24h1v1h-1zM10 24h1v1h-1zM12 24h1v1h-1zM13 24h1v1h-1zM14 24h1v1h-1zM18 24h1v1h-1zM19 24h1v1h-1zM22 24h1v1h-1zM26 24h1v1h-1zM28 24h1v1h-1zM29 24h1v1h-1zM32 24h1v1h-1zM33 24h1v1h-1zM36 24h1v1h-1zM4 25h1v1h-1zM7 25h1v1h-1zM8 25h1v1h-1zM9 25h1v1h-1zM11 25h1v1h-1zM18 25h1v1h-1zM19 25h1v1h-1zM20 25h1v1h-1zM21 25h1v1h-1zM23 25h1v1h-1zM25 25h1v1h-1zM27 25h1v1h-1zM29 25h1v1h-1zM30 25h1v1h-1zM33 25h1v1h-1zM36 25h1v1h-1zM4 26h1v1h-1zM6 26h1v1h-1zM8 26h1v1h-1zM9 26h1v1h-1zM10 26h1v1h-1zM12 26h1v1h-1zM13 26h1v1h-1zM16 26h1v1h-1zM21 26h1v1h-1zM26 26h1v1h-1zM30 26h1v1h-1zM31 26h1v1h-1zM32 26h1v1h-1zM34 26h1v1h-1zM35 26h1v1h-1zM4 27h1v1h-1zM7 27h1v1h-1zM11 27h1v1h-1zM12 27h1v1h-1zM13 27h1v1h-1zM14 27h1v1h-1zM17 27h1v1h-1zM20 27h1v1h-1zM22 27h1v1h-1zM25 27h1v1h-1zM30 27h1v1h-1zM31 27h1v1h-1zM33 27h1v1h-1zM34 27h1v1h-1zM35 27h1v1h-1zM36 27h1v1h-1zM4 28h1v1h-1zM7 28h1v1h-1zM10 28h1v1h-1zM11 28h1v1h-1zM12 28h1v1h-1zM13 28h1v1h-1zM16 28h1v1h-1zM20 28h1v1h-1zM21 28h1v1h-1zM23 28h1v1h-1zM24 28h1v1h-1zM26 28h1v1h-1zM27 28h1v1h-1zM28 28h1v1h-1zM29 28h1v1h-1zM30 28h1v1h-1zM31 28h1v1h-1zM32 28h1v1h-1zM12 29h1v1h-1zM17 29h1v1h-1zM18 29h1v1h-1zM20 29h1v1h-1zM21 29h1v1h-1zM22 29h1v1h-1zM23 29h1v1h-1zM24 29h1v1h-1zM27 29h1v1h-1zM28 29h1v1h-1zM32 29h1v1h-1zM34 29h1v1h-1zM36 29h1v1h-1zM4 30h1v1h-1zM5 30h1v1h-1zM6 30h1v1h-1zM7 30h1v1h-1zM8 30h1v1h-1zM9 30h1v1h-1zM10 30h1v1h-1zM14 30h1v1h-1zM17 30h1v1h-1zM18 30h1v1h-1zM19 30h1v1h-1zM20 30h1v1h-1zM21 30h1v1h-1zM24 30h1v1h-1zM25 30h1v1h-1zM27 30h1v1h-1zM28 30h1v1h-1zM30 30h1v1h-1zM32 30h1v1h-1zM34 30h1v1h-1zM35 30h1v1h-1zM4 31h1v1h-1zM10 31h1v1h-1zM12 31h1v1h-1zM13 31h1v1h-1zM17 31h1v1h-1zM18 31h1v1h-1zM19 31h1v1h-1zM21 31h1v1h-1zM22 31h1v1h-1zM23 31h1v1h-1zM25 31h1v1h-1zM26 31h1v1h-1zM27 31h1v1h-1zM28 31h1v1h-1zM32 31h1v1h-1zM33 31h1v1h-1zM34 31h1v1h-1zM36 31h1v1h-1zM4 32h1v1h-1zM6 32h1v1h-1zM7 32h1v1h-1zM8 32h1v1h-1zM10 32h1v1h-1zM12 32h1v1h-1zM13 32h1v1h-1zM16 32h1v1h-1zM17 32h1v1h-1zM20 32h1v1h-1zM26 32h1v1h-1zM28 32h1v1h-1zM29 32h1v1h-1zM30 32h1v1h-1zM31 32h1v1h-1zM32 32h1v1h-1zM33 32h1v1h-1zM35 32h1v1h-1zM36 32h1v1h-1zM4 33h1v1h-1zM6 33h1v1h-1zM7 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM12 33h1v1h-1zM13 33h1v1h-1zM16 33h1v1h-1zM18 33h1v1h-1zM19 33h1v1h-1zM22 33h1v1h-1zM23 33h1v1h-1zM24 33h1v1h-1zM25 33h1v1h-1zM26 33h1v1h-1zM27 33h1v1h-1zM28 33h1v1h-1zM29 33h1v1h-1zM32 33h1v1h-1zM35 33h1v1h-1zM36 33h1v1h-1zM4 34h1v1h-1zM6 34h1v1h-1zM7 34h1v1h-1zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h1v1h-1zM14 34h1v1h-1zM15 34h1v1h-1zM16 34h1v1h-1zM19 34h1v1h-1zM20 34h1v1h-1zM21 34h1v1h-1zM25 34h1v1h-1zM26 34h1v1h-1zM27 34h1v1h-1zM28 34h1v1h-1zM30 34h1v1h-1zM31 34h1v1h-1zM33 34h1v1h-1zM34 34h1v1h-1zM4 35h1v1h-1zM10 35h1v1h-1zM13 35h1v1h-1zM14 35h1v1h-1zM16 35h1v1h-1zM19 35h1v1h-1zM24 35h1v1h-1zM25 35h1v1h-1zM26 35h1v1h-1zM30 35h1v1h-1zM32 35h1v1h-1zM33 35h1v1h-1zM34 35h1v1h-1zM4 36h1v1h-1zM5 36h1v1h-1zM6 36h1v1h-1zM7 36h1v1h-1zM8 36h1v1h-1zM9 36h1v1h-1zM10 36h1v1h-1zM12 36h1v1h-1zM13 36h1v1h-1zM15 36h1v1h-1zM19 36h1v1h-1zM21 36h1v1h-1zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h1v1h-1zM29 36h1v1h-1zM31 36h1v1h-1zM35 36h1v1h-1z" fill="#000"/></svg>';
 function flashBtn(btn,msg){ if(!btn) return; var old=btn.textContent; btn.textContent=msg; btn.disabled=true; setTimeout(function(){ btn.textContent=old; btn.disabled=false; },2400); }
 function copyLink(url,btn){
@@ -290,6 +332,155 @@ function checkUpdates(){
 function chapLabel(b,c){ if(c.head) return c.head; if(c.label) return b.id==="summa-theologiae" ? "Reading "+c.n+" · "+c.label : c.label; if(b.chapters && b.chapters.length===1) return ""; if(typeof b.count==="number" && b.count===1) return ""; return (b.unit||"Chapter")+" "+c.n; }
 function countLabel(b){ var n=(typeof b.count==="number") ? b.count : b.chapters.filter(function(c){return !c.head;}).length; var u=(b.unit||"Chapter").toLowerCase(); return n+" "+(n===1?"reading":u+"s"); }
 
+/* ---- reading progress: bookmarks, read & seen marks, completed books ----
+   Saved only on this device, under its own key ("lof-reading-progress"),
+   separate from the reading settings, so every reader can pick up where
+   they left off — like the Bible app keeps your place. No accounts,
+   nothing leaves the device, and it works offline. Quiet marks only:
+   no streaks, no scores, no pressure. */
+var PROG={bookmarks:{},read:{},seen:{},complete:{}};
+try{ var praw=JSON.parse(localStorage.getItem("lof-reading-progress")||"null");
+  if(praw && typeof praw==="object"){ ["bookmarks","read","seen","complete"].forEach(function(k){ if(praw[k] && typeof praw[k]==="object") PROG[k]=praw[k]; }); }
+}catch(e){}
+function saveProg(){ try{ localStorage.setItem("lof-reading-progress",JSON.stringify(PROG)); }catch(e){} }
+function pkey(id,n){ return id+":"+n; }
+function entryId(k,v){ if(v && v.id) return v.id; var i=k.lastIndexOf(":"); return i>-1?k.slice(0,i):k; }
+function entryN(k,v){ if(v && typeof v.n==="number") return v.n; var i=k.lastIndexOf(":"); return i>-1?parseInt(k.slice(i+1),10):0; }
+function isBookmarked(id,n){ return !!PROG.bookmarks[pkey(id,n)]; }
+function isReadM(id,n){ return !!PROG.read[pkey(id,n)]; }
+function isSeenM(id,n){ return !!PROG.seen[pkey(id,n)]; }
+function escA(s){ return esc(String(s)).replace(/"/g,"&quot;"); }
+function chapOf(id,n){ var b=FULL[id]; if(!b||!b.chapters) return null; for(var i=0;i<b.chapters.length;i++) if(b.chapters[i].n===n) return b.chapters[i]; return null; }
+function markLabel(id,n){ var b=FULL[id]||byId(id); var c=chapOf(id,n); var lab=c?chapLabel(b,c):""; var t=c?(c.title||""):""; return (lab?(lab+(t?" · ":"")):"")+(t||("Reading "+n)); }
+function setBookmark(id,n,on){ var k=pkey(id,n); if(on){ PROG.bookmarks[k]={id:id,n:n,at:Date.now(),label:(n===0?"":markLabel(id,n)),book:((byId(id)||{}).title||id)}; } else { delete PROG.bookmarks[k]; } saveProg(); }
+function toggleBookmark(id,n){ var on=!isBookmarked(id,n); setBookmark(id,n,on); return on; }
+function setReadM(id,n,on){ var k=pkey(id,n); if(on){ PROG.read[k]={id:id,n:n,at:Date.now(),label:markLabel(id,n),book:((byId(id)||{}).title||id)}; } else { delete PROG.read[k]; } saveProg(); }
+function markSeen(id,n){ var k=pkey(id,n); if(!PROG.seen[k]){ PROG.seen[k]=Date.now(); saveProg(); } }
+function bookTotal(id){ var f=FULL[id]; if(f && f.chapters) return f.chapters.filter(function(c){return !c.head;}).length; var b=byId(id); return b?b.count:0; }
+function bookMapCount(map,id){ var n=0; for(var k in map){ if(entryId(k,map[k])===id) n++; } return n; }
+function bookReadCount(id){ return bookMapCount(PROG.read,id); }
+function bookIsComplete(id){ if(PROG.complete[id]) return true; var t=bookTotal(id); return t>0 && bookReadCount(id)>=t; }
+function nextUnread(id){ var t=bookTotal(id); for(var n=1;n<=t;n++){ if(!isReadM(id,n)) return n; } return t>0?t:1; }
+function progChipHtml(b){
+  if(bookIsComplete(b.id)) return '<span class="chip prog done">Completed ✓</span>';
+  var rc=bookReadCount(b.id);
+  if(rc>0) return '<span class="chip prog">'+rc+' of '+bookTotal(b.id)+' read</span>';
+  if(isBookmarked(b.id,0)) return '<span class="chip prog">🔖 Bookmarked</span>';
+  return "";
+}
+function myReadingHtml(){
+  var bm=[], inprog=[], done=[];
+  var keys=Object.keys(PROG.bookmarks);
+  keys.sort(function(a,b2){ return ((PROG.bookmarks[b2]||{}).at||0)-((PROG.bookmarks[a]||{}).at||0); });
+  keys.forEach(function(k){ var v=PROG.bookmarks[k]; var id=entryId(k,v), n=entryN(k,v); var b=byId(id); if(!b) return; bm.push({id:id,n:n,label:v.label||"",book:(v.book||b.title)}); });
+  CATALOG.forEach(function(b){
+    if(bookIsComplete(b.id)){ done.push(b); return; }
+    var rc=bookReadCount(b.id);
+    if(rc>0 || bookMapCount(PROG.seen,b.id)>0) inprog.push({b:b,rc:rc,total:bookTotal(b.id)});
+  });
+  var h='<section class="myreading" id="myreading"><h2 class="shelf">My reading</h2>';
+  if(!bm.length && !inprog.length && !done.length){
+    h+='<p class="mrempty">Nothing here yet. Open any book and tap “Mark as read” as you finish a reading, or 🔖 to bookmark a place to return to. The books you are partway through and the ones you have completed will gather here, saved on this device.</p>';
+  }
+  if(bm.length){
+    h+='<h3 class="mrh">Bookmarks</h3><ul class="mrlist">';
+    bm.forEach(function(x){
+      if(x.n===0){ h+='<li><a href="#/book/'+x.id+'"><strong>'+esc(x.book)+'</strong></a><span class="mrn">Bookmarked book</span></li>'; }
+      else { h+='<li><a href="#/read/'+x.id+'/'+x.n+'"><strong>'+esc(x.book)+'</strong></a><span class="mrn">'+esc(x.label||("Reading "+x.n))+'</span></li>'; }
+    });
+    h+='</ul>';
+  }
+  if(inprog.length){
+    h+='<h3 class="mrh">In progress</h3><ul class="mrlist">';
+    inprog.forEach(function(x){ h+='<li><a href="#/book/'+x.b.id+'"><strong>'+esc(x.b.title)+'</strong></a><span class="mrn">'+x.rc+' of '+x.total+' read</span><a class="mrgo" href="#/read/'+x.b.id+'/'+nextUnread(x.b.id)+'">Continue →</a></li>'; });
+    h+='</ul>';
+  }
+  if(done.length){
+    h+='<h3 class="mrh">Completed</h3><ul class="mrlist">';
+    done.forEach(function(b){ h+='<li><a href="#/book/'+b.id+'"><strong>'+esc(b.title)+'</strong></a><span class="mrn">Completed ✓</span></li>'; });
+    h+='</ul>';
+  }
+  h+='<p class="mrnote">Kept on this device only — nothing is sent anywhere. To protect your place, save a backup from Settings, under “My reading.”</p></section>';
+  return h;
+}
+function doorProgHtml(id){
+  var total=bookTotal(id), rc=bookReadCount(id), done=bookIsComplete(id), manual=!!PROG.complete[id];
+  var h='<div class="doorprog" id="doorprog">';
+  if(done && manual && rc<total){ h+='<p class="progline"><strong>Completed ✓</strong> — marked complete by hand'+(rc>0?(" · "+rc+" of "+total+" readings read here"):"")+'.</p>'; }
+  else if(done){ h+='<p class="progline"><strong>Completed ✓</strong> — every reading in this book is read.</p>'; }
+  else if(rc>0){ h+='<p class="progline">'+rc+' of '+total+' readings read</p><div class="progbar" aria-hidden="true"><span style="width:'+(total?Math.max(2,Math.round(rc/total*100)):0)+'%"></span></div>'; }
+  else { h+='<p class="progline">Not started yet — as you read, your place is kept here on this device.</p>'; }
+  h+='<p class="progrow">';
+  if(!done || manual){ h+='<button type="button" class="sharebtn" onclick="toggleBookComplete(\''+id+'\')">'+(manual?"Undo “marked complete”":"Mark book as complete")+'</button> '; }
+  var bk=isBookmarked(id,0);
+  h+='<button type="button" class="sharebtn'+(bk?" on":"")+'" onclick="toggleBookBookmark(\''+id+'\')" aria-pressed="'+(bk?"true":"false")+'">'+(bk?"🔖 Bookmarked":"🔖 Bookmark this book")+'</button>';
+  h+='</p></div>';
+  return h;
+}
+function refreshDoorProg(id){ var d=document.getElementById("doorprog"); if(d) d.outerHTML=doorProgHtml(id); }
+function toggleBookComplete(id){ if(PROG.complete[id]){ delete PROG.complete[id]; } else { PROG.complete[id]=Date.now(); } saveProg(); refreshDoorProg(id); }
+function toggleBookBookmark(id){ toggleBookmark(id,0); refreshDoorProg(id); }
+function tocHtml(full){
+  var h='<ol class="toc">';
+  full.chapters.forEach(function(c){
+    var rd=isReadM(full.id,c.n), sn=isSeenM(full.id,c.n), bk=isBookmarked(full.id,c.n);
+    var marks=rd?'<span class="tmark rd">✓ Read</span>':(sn?'<span class="tmark sn">Seen</span>':"");
+    h+='<li><div class="tocrow"><a href="#/read/'+full.id+'/'+c.n+'"'+(rd?' class="isread"':"")+'><span class="n">'+(chapLabel(full,c)||"Reading")+'</span>'+esc(c.title||"")+marks+'</a><button type="button" class="tocbm'+(bk?" on":"")+'" data-bm="'+full.id+':'+c.n+'" aria-pressed="'+(bk?"true":"false")+'" aria-label="'+(bk?"Remove bookmark from ":"Bookmark ")+escA(c.title||("Reading "+c.n))+'" title="'+(bk?"Bookmarked — tap to remove":"Bookmark this reading")+'">'+(bk?"🔖 Saved":"🔖")+'</button></div></li>';
+  });
+  h+='</ol>';
+  return h;
+}
+function bindToc(full){
+  var btns=document.querySelectorAll(".tocbm");
+  for(var i=0;i<btns.length;i++){ btns[i].addEventListener("click",function(){
+    var raw=this.getAttribute("data-bm"); var cut=raw.lastIndexOf(":"); var id=raw.slice(0,cut), n=parseInt(raw.slice(cut+1),10);
+    toggleBookmark(id,n);
+    var f=FULL[id]; var wrap=document.getElementById("tocwrap");
+    if(wrap && f){ wrap.innerHTML=tocHtml(f); bindToc(f); }
+    refreshDoorProg(id);
+  }); }
+}
+function readActionsHtml(){
+  if(!CUR) return "";
+  var id=CUR.id, n=CUR.n, rd=isReadM(id,n), bk=isBookmarked(id,n), sn=isSeenM(id,n);
+  var h='<div class="readactions" id="readactions">';
+  h+='<button type="button" class="navbtn'+(rd?" on":"")+'" onclick="toggleReadCur()" aria-pressed="'+(rd?"true":"false")+'">'+(rd?"✓ Read — tap to undo":"Mark as read")+'</button>';
+  h+='<button type="button" class="navbtn'+(bk?" on":"")+'" onclick="toggleBookmarkCur()" aria-pressed="'+(bk?"true":"false")+'">'+(bk?"🔖 Bookmarked":"🔖 Bookmark")+'</button>';
+  if(sn && !rd) h+='<span class="seenote">Seen — opened on this device</span>';
+  h+='</div>';
+  return h;
+}
+function paintReadActions(){ var el=document.getElementById("readactions"); if(el) el.outerHTML=readActionsHtml(); }
+function toggleReadCur(){ if(!CUR) return; setReadM(CUR.id,CUR.n,!isReadM(CUR.id,CUR.n)); paintReadActions(); }
+function toggleBookmarkCur(){ if(!CUR) return; toggleBookmark(CUR.id,CUR.n); paintReadActions(); }
+/* ---- protect your progress: backup & restore (this device only) ---- */
+function progMsg(t){ var m=document.getElementById("progMsg"); if(!m) return; m.textContent=t; m.classList.remove("hidden"); }
+function exportProg(){
+  var payload=JSON.stringify({app:"Library of Faith",kind:"lof-reading-progress",version:1,exported:new Date().toISOString(),data:PROG},null,2);
+  var fname="library-of-faith-my-reading-backup.json";
+  function fallback(){ if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(payload).then(function(){ progMsg("The backup was copied — paste it into a file and keep it safe, then restore from that file here."); },function(){ progMsg("A backup could not be made just now — please try again."); }); } else { progMsg("A backup could not be made just now — please try again."); } }
+  try{
+    var blob=new Blob([payload],{type:"application/json"});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement("a"); a.href=url; a.download=fname; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ try{ URL.revokeObjectURL(url); }catch(e){} },4000);
+    progMsg("Backup saved as "+fname+" — keep it somewhere safe. Restore it here any time from “Restore a backup.”");
+  }catch(e){ fallback(); }
+}
+function importProg(obj){
+  var data=(obj && obj.data && typeof obj.data==="object") ? obj.data : obj;
+  if(!data || typeof data!=="object"){ progMsg("That file is not a Library of Faith reading backup — nothing was changed."); return; }
+  var added=0, found=false;
+  ["bookmarks","read","seen","complete"].forEach(function(k){
+    var src=data[k]; if(!src || typeof src!=="object") return; found=true;
+    for(var key in src){ if(!(key in PROG[k])){ PROG[k][key]=src[key]; added++; } }
+  });
+  if(!found){ progMsg("That file holds no reading progress — nothing was changed."); return; }
+  saveProg();
+  progMsg(added>0 ? ("Backup restored — "+added+" saved mark"+(added===1?"":"s")+" added to what is on this device.") : "That backup is already fully on this device — nothing new to add.");
+  route();
+}
+
 /* Collapsible home shelves: each shelf's open/closed choice is remembered
    on this device. Shelves start closed; while a search is running, a shelf
    with matches opens for the duration of the search. */
@@ -303,9 +494,12 @@ function renderHome(filter){
   var html='<h1 class="site">Library of Faith</h1><p class="tagline">Classic books and documents of the Christian faith, public domain, made easy to read.</p>';
   html+='<input class="searchbox" id="search" type="search" placeholder="Search by title, author, or topic…" value="'+esc(filter||"")+'" aria-label="Search the library">';
   html+='<div class="noresults" id="noresults">No books match that search yet.</div>';
-  html+='<p class="homerow"><button type="button" class="sharebtn" onclick="shareLibrary(this)">Share this library</button> <button type="button" class="sharebtn" id="updbtnTop" onclick="checkUpdates()">Check for updates</button><span class="updmsg" id="updmsgTop"></span></p>';
+  html+='<p class="homerow"><button type="button" class="sharebtn" onclick="shareLibrary(this)">Share this library</button> <a class="sharebtn myrbtn" href="#myreading">My reading</a> <button type="button" class="sharebtn" id="updbtnTop" onclick="checkUpdates()">Check for updates</button><span class="updmsg" id="updmsgTop"></span></p>';
   if(!q){
     html+='<div class="passiton"><h2>Pass it on</h2><p>Show this code to a friend — they scan it, and the Library of Faith opens for them. Free, like it was for you.</p><span class="qrcard">'+LIBRARY_QR_SVG+'</span><p class="qrurl">jesuslovestyler.github.io/Library-of-Faith/</p><p class="qrdl"><a href="assets/qr-library-of-faith.png" download="qr-library-of-faith.png">Download the code to print or share</a></p></div>';
+  }
+  if(!q){
+    html+=myReadingHtml();
   }
   var shelves=["Documents & Creeds","Protestant","Catholic","Eastern Orthodox"];
   shelves.forEach(function(sh){
@@ -316,7 +510,7 @@ function renderHome(filter){
     html+='<section data-shelf="'+sh+'"><h2 class="shelf"><button type="button" class="shelfbtn" data-shelf="'+esc(sh)+'" aria-expanded="'+(open?"true":"false")+'" aria-controls="shelfbody-'+slug+'"><span class="shelfbtn-name">'+sh+'</span><span class="shelfbtn-meta"><span class="shelfcount">'+books.length+(books.length===1?" work":" works")+'</span><span class="shelfchev" aria-hidden="true">'+(open?"▾":"▸")+'</span></span></button></h2>';
     html+='<div class="shelfbody" id="shelfbody-'+slug+'"'+(open?"":" hidden")+'>';
     visible.forEach(function(b){
-      html+='<a class="book" href="#/book/'+b.id+'"><h3>'+b.title+'</h3><p class="by">'+b.author+'</p><p class="desc">'+b.why.split(".")[0]+'.</p><span class="meta"><span class="chip">'+b.tradition+'</span><span class="chip">'+b.len+'</span><span class="chip">'+countLabel(b)+'</span></span></a>';
+      html+='<a class="book" href="#/book/'+b.id+'"><h3>'+b.title+'</h3><p class="by">'+b.author+'</p><p class="desc">'+b.why.split(".")[0]+'.</p><span class="meta"><span class="chip">'+b.tradition+'</span><span class="chip">'+b.len+'</span><span class="chip">'+countLabel(b)+'</span>'+progChipHtml(b)+'</span></a>';
     });
     html+='</div></section>';
   });
@@ -359,7 +553,7 @@ function renderDoor(id){
   html+='<div><dt>Best place to start</dt><dd>'+b.start+'</dd></div>';
   html+='<div><dt>Length</dt><dd>'+b.len+'</dd></div>';
   html+='<div><dt>Source</dt><dd>'+b.source+'</dd></div>';
-  html+='</dl><p><button type="button" class="sharebtn" onclick="shareBook(\''+b.id+'\',this)">Share this book</button></p><h2 class="shelf">Contents</h2><div id="tocwrap"><p class="loading">Loading this book\u2026</p></div></div>';
+  html+='</dl><p><button type="button" class="sharebtn" onclick="shareBook(\''+b.id+'\',this)">Share this book</button></p>'+doorProgHtml(b.id)+'<h2 class="shelf">Contents</h2><div id="tocwrap"><p class="loading">Loading this book\u2026</p></div></div>';
   document.getElementById("app").innerHTML=html;
   document.getElementById("crumb").textContent=b.title;
   window.scrollTo(0,0);
@@ -367,12 +561,8 @@ function renderDoor(id){
   ensureBook(id).then(function(full){
     if(location.hash!==myHash) return;
     var wrap=document.getElementById("tocwrap"); if(!wrap) return;
-    var h='<ol class="toc">';
-    full.chapters.forEach(function(c,i){
-      h+='<li><a href="#/read/'+full.id+'/'+c.n+'"><span class="n">'+(chapLabel(full,c)||"Reading")+'</span>'+c.title+'</a></li>';
-    });
-    h+='</ol>';
-    wrap.innerHTML=h;
+    wrap.innerHTML=tocHtml(full);
+    bindToc(full);
   }).catch(function(){
     if(location.hash!==myHash) return;
     var wrap=document.getElementById("tocwrap"); if(!wrap) return;
@@ -400,6 +590,7 @@ function renderReadLoaded(id,num){
   if(idx<0){location.hash="#/book/"+id;return;}
   var c=b.chapters[idx];
   CUR={id:id,n:num,label:chapLabel(b,c)};
+  markSeen(id,num);
   var prev=b.chapters[idx-1], next=b.chapters[idx+1];
   var html='<p><a class="backlink" href="#/book/'+b.id+'">← Contents — '+b.title+'</a></p><div class="reader">';
   html+='<h1>'+b.title+'</h1><p class="chlabel">'+(chapLabel(b,c)?(chapLabel(b,c)+(c.title?" · ":"")):"")+c.title+'</p><div class="body">';
@@ -407,7 +598,7 @@ function renderReadLoaded(id,num){
     if(b.numbered){ html+='<p class="verse"><span class="vn">'+(i+1)+'.</span>'+esc(p)+'</p>'; }
     else{ html+='<p>'+esc(p).replace(/\n/g,'<br>')+'</p>'; }
   });
-  html+='</div><div class="navrow">';
+  html+='</div>'+readActionsHtml()+'<div class="navrow">';
   if(prev){ html+='<a class="navbtn" href="#/read/'+b.id+'/'+prev.n+'">← '+chapLabel(b,prev)+'</a>'; } else { html+='<span class="navbtn disabled">← Previous</span>'; }
   html+='<a class="navbtn" href="#/book/'+b.id+'">Contents</a>';
   html+='<button type="button" class="navbtn" onclick="shareBook(\''+b.id+'\',this)">Share</button>';
@@ -533,6 +724,16 @@ for(var ti=0;ti<thmBtns.length;ti++){ thmBtns[ti].addEventListener("click",funct
 var palBtns=document.querySelectorAll(".pal");
 for(var pi=0;pi<palBtns.length;pi++){ palBtns[pi].addEventListener("click",function(){ SET.palette=this.getAttribute("data-palette-set"); SET.theme="device"; saveSettings(); applySettings(); }); }
 if(window.speechSynthesis && window.speechSynthesis.onvoiceschanged!==undefined){ window.speechSynthesis.onvoiceschanged=refreshVoiceNote; }
+document.getElementById("progExport").addEventListener("click",exportProg);
+document.getElementById("progImportBtn").addEventListener("click",function(){ document.getElementById("progFile").click(); });
+document.getElementById("progFile").addEventListener("change",function(){
+  var f=this.files && this.files[0]; this.value="";
+  if(!f) return;
+  var r=new FileReader();
+  r.onload=function(){ try{ importProg(JSON.parse(String(r.result||""))); }catch(e){ progMsg("That file could not be read as a backup — nothing was changed."); } };
+  r.onerror=function(){ progMsg("That file could not be read — nothing was changed."); };
+  r.readAsText(f);
+});
 applySettings();
 
 function route(){
@@ -542,6 +743,7 @@ function route(){
   var m;
   if(m=h.match(/^#\/book\/([\w-]+)$/)){ renderDoor(m[1]); }
   else if(m=h.match(/^#\/read\/([\w-]+)\/(\d+)$/)){ renderRead(m[1],parseInt(m[2],10)); }
+  else if(h==="#myreading" || h==="#/my-reading"){ renderHome(""); var mr=document.getElementById("myreading"); if(mr){ mr.scrollIntoView(); } }
   else{ renderHome(""); }
 }
 window.addEventListener("hashchange",route);
