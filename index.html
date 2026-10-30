@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <meta name="description" content="Classic books and documents of the Christian faith, public domain, made easy to read.">
-<meta name="library-build" content="2026-10-27.16">
+<meta name="library-build" content="2026-10-29.1">
 <meta property="og:title" content="Library of Faith">
 <meta property="og:description" content="Classic books and documents of the Christian faith, public domain, made easy to read.">
 <meta property="og:type" content="website">
@@ -195,6 +195,22 @@ button.navbtn.on{background:var(--accent);color:var(--accent-ink);border-color:v
 .qgroupbody{padding-top:2px}
 a.quote{display:block;text-decoration:none;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 20px 14px;margin:0 0 10px;box-shadow:var(--shadow)}
 a.quote:hover{border-color:var(--accent)}
+/* inline listen bar: hear any reading without opening Settings */
+.listenbar{position:sticky;top:8px;z-index:30;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:12px 14px;margin:0 0 18px}
+.listenrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.listenrow+.listenrow{margin-top:10px}
+.listenplay{font-family:system-ui,sans-serif;font-size:17px;font-weight:700;background:var(--accent);color:var(--accent-ink);border:1px solid var(--accent);border-radius:10px;padding:12px 22px;cursor:pointer;min-height:50px}
+.listenstop{font-family:system-ui,sans-serif;font-size:15px;font-weight:600;background:var(--surface2);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:12px 16px;cursor:pointer;min-height:50px}
+.listenstop:disabled{opacity:.45;cursor:default}
+.listenstatus{font-family:system-ui,sans-serif;font-size:14px;color:var(--muted)}
+.lspd{font-family:system-ui,sans-serif;font-size:14.5px;font-weight:600;background:var(--surface2);border:1px solid var(--line);color:var(--ink);padding:8px 13px;border-radius:9px;cursor:pointer}
+.lspd.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.voicelab{font-family:system-ui,sans-serif;font-size:14.5px;color:var(--muted);display:inline-flex;align-items:center;gap:7px}
+.voicesel{font-family:system-ui,sans-serif;font-size:15px;background:var(--surface2);color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:8px 10px;max-width:230px}
+.voicenote{font-family:system-ui,sans-serif;font-size:13.5px;color:var(--muted);margin:8px 0 0}
+.tocrow{flex-wrap:wrap}
+.tocrow a{flex:1 1 190px}
+.tocplay{font-family:system-ui,sans-serif;font-size:14px;font-weight:700;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:0 13px;cursor:pointer;box-shadow:var(--shadow);color:var(--accent);white-space:nowrap;min-height:44px}
 a.quote blockquote{margin:0;font-size:18px;line-height:1.55;font-style:italic;white-space:pre-line}
 .qattr{font-family:system-ui,sans-serif;font-size:13.5px;color:var(--muted);margin:8px 0 0}
 .qattr strong{color:var(--ink)}
@@ -208,7 +224,7 @@ a.quote blockquote{margin:0;font-size:18px;line-height:1.55;font-style:italic;wh
     <button type="button" class="setbtn" id="setopen" aria-haspopup="dialog">Settings</button>
   </div>
   <main id="app"></main>
-  <footer>Made by Noki for Tyler. Public domain — share freely. <span class="buildstamp">Library build 2026-10-27.16</span><blockquote class="epigraph">&ldquo;Moreover, in the Catholic Church itself, all possible care must be taken, that we hold that faith which has been believed everywhere, always, by all.&rdquo;<span class="epigattr">St. Vincent of Lérins · The Commonitory (AD 434) · Chapter 2</span></blockquote></footer>
+  <footer>Made by Noki for Tyler. Public domain — share freely. <span class="buildstamp">Library build 2026-10-29.1</span><blockquote class="epigraph">&ldquo;Moreover, in the Catholic Church itself, all possible care must be taken, that we hold that faith which has been believed everywhere, always, by all.&rdquo;<span class="epigattr">St. Vincent of Lérins · The Commonitory (AD 434) · Chapter 2</span></blockquote></footer>
 </div>
 <div id="setwrap" class="hidden">
   <div id="setbackdrop"></div>
@@ -225,6 +241,10 @@ a.quote blockquote{margin:0;font-size:18px;line-height:1.55;font-style:italic;wh
       <button type="button" class="spd" data-rate="0.75">0.75×</button>
       <button type="button" class="spd" data-rate="1">1×</button>
       <button type="button" class="spd" data-rate="1.25">1.25×</button>
+    </div>
+    <div class="setrow">
+      <span class="setlab">Voice</span>
+      <select class="voicesel" id="setVoice" aria-label="Reading voice"></select>
     </div>
     <p class="setnote hidden" id="voiceNote">No English voice was found on this device, so the device's default voice will read.</p>
     <h3>Text size</h3>
@@ -312,7 +332,7 @@ function ensureBook(id){
   return p;
 }
 var SITE_URL = "https://jesuslovestyler.github.io/Library-of-Faith/";
-var BUILD_STAMP = "2026-10-27.16";
+var BUILD_STAMP = "2026-10-29.1";
 var LIBRARY_QR_SVG = '<svg viewBox="0 0 41 41" shape-rendering="crispEdges" role="img" aria-label="QR code for the Library of Faith web address"><rect width="41" height="41" fill="#fff"/><path d="M4 4h1v1h-1zM5 4h1v1h-1zM6 4h1v1h-1zM7 4h1v1h-1zM8 4h1v1h-1zM9 4h1v1h-1zM10 4h1v1h-1zM13 4h1v1h-1zM15 4h1v1h-1zM16 4h1v1h-1zM20 4h1v1h-1zM22 4h1v1h-1zM23 4h1v1h-1zM24 4h1v1h-1zM27 4h1v1h-1zM30 4h1v1h-1zM31 4h1v1h-1zM32 4h1v1h-1zM33 4h1v1h-1zM34 4h1v1h-1zM35 4h1v1h-1zM36 4h1v1h-1zM4 5h1v1h-1zM10 5h1v1h-1zM14 5h1v1h-1zM15 5h1v1h-1zM19 5h1v1h-1zM20 5h1v1h-1zM22 5h1v1h-1zM25 5h1v1h-1zM26 5h1v1h-1zM30 5h1v1h-1zM36 5h1v1h-1zM4 6h1v1h-1zM6 6h1v1h-1zM7 6h1v1h-1zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM15 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM19 6h1v1h-1zM20 6h1v1h-1zM24 6h1v1h-1zM25 6h1v1h-1zM26 6h1v1h-1zM27 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM33 6h1v1h-1zM34 6h1v1h-1zM36 6h1v1h-1zM4 7h1v1h-1zM6 7h1v1h-1zM7 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM15 7h1v1h-1zM19 7h1v1h-1zM22 7h1v1h-1zM23 7h1v1h-1zM25 7h1v1h-1zM26 7h1v1h-1zM28 7h1v1h-1zM30 7h1v1h-1zM32 7h1v1h-1zM33 7h1v1h-1zM34 7h1v1h-1zM36 7h1v1h-1zM4 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM8 8h1v1h-1zM10 8h1v1h-1zM12 8h1v1h-1zM13 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM19 8h1v1h-1zM20 8h1v1h-1zM24 8h1v1h-1zM27 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h1v1h-1zM33 8h1v1h-1zM34 8h1v1h-1zM36 8h1v1h-1zM4 9h1v1h-1zM10 9h1v1h-1zM12 9h1v1h-1zM16 9h1v1h-1zM17 9h1v1h-1zM23 9h1v1h-1zM25 9h1v1h-1zM26 9h1v1h-1zM28 9h1v1h-1zM30 9h1v1h-1zM36 9h1v1h-1zM4 10h1v1h-1zM5 10h1v1h-1zM6 10h1v1h-1zM7 10h1v1h-1zM8 10h1v1h-1zM9 10h1v1h-1zM10 10h1v1h-1zM12 10h1v1h-1zM14 10h1v1h-1zM16 10h1v1h-1zM18 10h1v1h-1zM20 10h1v1h-1zM22 10h1v1h-1zM24 10h1v1h-1zM26 10h1v1h-1zM28 10h1v1h-1zM30 10h1v1h-1zM31 10h1v1h-1zM32 10h1v1h-1zM33 10h1v1h-1zM34 10h1v1h-1zM35 10h1v1h-1zM36 10h1v1h-1zM12 11h1v1h-1zM13 11h1v1h-1zM20 11h1v1h-1zM23 11h1v1h-1zM24 11h1v1h-1zM25 11h1v1h-1zM27 11h1v1h-1zM4 12h1v1h-1zM6 12h1v1h-1zM7 12h1v1h-1zM8 12h1v1h-1zM9 12h1v1h-1zM10 12h1v1h-1zM13 12h1v1h-1zM17 12h1v1h-1zM20 12h1v1h-1zM21 12h1v1h-1zM23 12h1v1h-1zM26 12h1v1h-1zM30 12h1v1h-1zM31 12h1v1h-1zM32 12h1v1h-1zM33 12h1v1h-1zM34 12h1v1h-1zM4 13h1v1h-1zM5 13h1v1h-1zM7 13h1v1h-1zM12 13h1v1h-1zM15 13h1v1h-1zM16 13h1v1h-1zM17 13h1v1h-1zM20 13h1v1h-1zM21 13h1v1h-1zM23 13h1v1h-1zM24 13h1v1h-1zM25 13h1v1h-1zM27 13h1v1h-1zM30 13h1v1h-1zM31 13h1v1h-1zM33 13h1v1h-1zM34 13h1v1h-1zM36 13h1v1h-1zM4 14h1v1h-1zM5 14h1v1h-1zM8 14h1v1h-1zM10 14h1v1h-1zM11 14h1v1h-1zM13 14h1v1h-1zM14 14h1v1h-1zM16 14h1v1h-1zM17 14h1v1h-1zM18 14h1v1h-1zM19 14h1v1h-1zM21 14h1v1h-1zM24 14h1v1h-1zM26 14h1v1h-1zM32 14h1v1h-1zM34 14h1v1h-1zM5 15h1v1h-1zM6 15h1v1h-1zM7 15h1v1h-1zM12 15h1v1h-1zM17 15h1v1h-1zM19 15h1v1h-1zM21 15h1v1h-1zM22 15h1v1h-1zM25 15h1v1h-1zM29 15h1v1h-1zM32 15h1v1h-1zM33 15h1v1h-1zM34 15h1v1h-1zM35 15h1v1h-1zM36 15h1v1h-1zM4 16h1v1h-1zM6 16h1v1h-1zM10 16h1v1h-1zM11 16h1v1h-1zM13 16h1v1h-1zM15 16h1v1h-1zM18 16h1v1h-1zM20 16h1v1h-1zM23 16h1v1h-1zM26 16h1v1h-1zM28 16h1v1h-1zM29 16h1v1h-1zM31 16h1v1h-1zM32 16h1v1h-1zM33 16h1v1h-1zM35 16h1v1h-1zM36 16h1v1h-1zM4 17h1v1h-1zM7 17h1v1h-1zM8 17h1v1h-1zM9 17h1v1h-1zM11 17h1v1h-1zM16 17h1v1h-1zM17 17h1v1h-1zM19 17h1v1h-1zM22 17h1v1h-1zM27 17h1v1h-1zM29 17h1v1h-1zM30 17h1v1h-1zM33 17h1v1h-1zM35 17h1v1h-1zM36 17h1v1h-1zM5 18h1v1h-1zM7 18h1v1h-1zM8 18h1v1h-1zM9 18h1v1h-1zM10 18h1v1h-1zM13 18h1v1h-1zM16 18h1v1h-1zM17 18h1v1h-1zM18 18h1v1h-1zM19 18h1v1h-1zM20 18h1v1h-1zM21 18h1v1h-1zM22 18h1v1h-1zM24 18h1v1h-1zM26 18h1v1h-1zM29 18h1v1h-1zM30 18h1v1h-1zM31 18h1v1h-1zM32 18h1v1h-1zM33 18h1v1h-1zM35 18h1v1h-1zM8 19h1v1h-1zM11 19h1v1h-1zM12 19h1v1h-1zM13 19h1v1h-1zM14 19h1v1h-1zM16 19h1v1h-1zM18 19h1v1h-1zM19 19h1v1h-1zM22 19h1v1h-1zM23 19h1v1h-1zM24 19h1v1h-1zM25 19h1v1h-1zM26 19h1v1h-1zM27 19h1v1h-1zM29 19h1v1h-1zM30 19h1v1h-1zM31 19h1v1h-1zM33 19h1v1h-1zM34 19h1v1h-1zM6 20h1v1h-1zM9 20h1v1h-1zM10 20h1v1h-1zM11 20h1v1h-1zM12 20h1v1h-1zM16 20h1v1h-1zM18 20h1v1h-1zM19 20h1v1h-1zM21 20h1v1h-1zM22 20h1v1h-1zM23 20h1v1h-1zM24 20h1v1h-1zM26 20h1v1h-1zM27 20h1v1h-1zM29 20h1v1h-1zM31 20h1v1h-1zM32 20h1v1h-1zM34 20h1v1h-1zM36 20h1v1h-1zM4 21h1v1h-1zM5 21h1v1h-1zM6 21h1v1h-1zM7 21h1v1h-1zM8 21h1v1h-1zM9 21h1v1h-1zM12 21h1v1h-1zM14 21h1v1h-1zM15 21h1v1h-1zM20 21h1v1h-1zM22 21h1v1h-1zM23 21h1v1h-1zM24 21h1v1h-1zM25 21h1v1h-1zM26 21h1v1h-1zM27 21h1v1h-1zM30 21h1v1h-1zM31 21h1v1h-1zM33 21h1v1h-1zM34 21h1v1h-1zM36 21h1v1h-1zM5 22h1v1h-1zM6 22h1v1h-1zM10 22h1v1h-1zM13 22h1v1h-1zM16 22h1v1h-1zM17 22h1v1h-1zM19 22h1v1h-1zM22 22h1v1h-1zM25 22h1v1h-1zM31 22h1v1h-1zM32 22h1v1h-1zM34 22h1v1h-1zM35 22h1v1h-1zM4 23h1v1h-1zM5 23h1v1h-1zM8 23h1v1h-1zM9 23h1v1h-1zM11 23h1v1h-1zM13 23h1v1h-1zM14 23h1v1h-1zM17 23h1v1h-1zM18 23h1v1h-1zM19 23h1v1h-1zM20 23h1v1h-1zM24 23h1v1h-1zM25 23h1v1h-1zM26 23h1v1h-1zM27 23h1v1h-1zM28 23h1v1h-1zM30 23h1v1h-1zM31 23h1v1h-1zM32 23h1v1h-1zM33 23h1v1h-1zM34 23h1v1h-1zM35 23h1v1h-1zM4 24h1v1h-1zM6 24h1v1h-1zM9 24h1v1h-1zM10 24h1v1h-1zM12 24h1v1h-1zM13 24h1v1h-1zM14 24h1v1h-1zM18 24h1v1h-1zM19 24h1v1h-1zM22 24h1v1h-1zM26 24h1v1h-1zM28 24h1v1h-1zM29 24h1v1h-1zM32 24h1v1h-1zM33 24h1v1h-1zM36 24h1v1h-1zM4 25h1v1h-1zM7 25h1v1h-1zM8 25h1v1h-1zM9 25h1v1h-1zM11 25h1v1h-1zM18 25h1v1h-1zM19 25h1v1h-1zM20 25h1v1h-1zM21 25h1v1h-1zM23 25h1v1h-1zM25 25h1v1h-1zM27 25h1v1h-1zM29 25h1v1h-1zM30 25h1v1h-1zM33 25h1v1h-1zM36 25h1v1h-1zM4 26h1v1h-1zM6 26h1v1h-1zM8 26h1v1h-1zM9 26h1v1h-1zM10 26h1v1h-1zM12 26h1v1h-1zM13 26h1v1h-1zM16 26h1v1h-1zM21 26h1v1h-1zM26 26h1v1h-1zM30 26h1v1h-1zM31 26h1v1h-1zM32 26h1v1h-1zM34 26h1v1h-1zM35 26h1v1h-1zM4 27h1v1h-1zM7 27h1v1h-1zM11 27h1v1h-1zM12 27h1v1h-1zM13 27h1v1h-1zM14 27h1v1h-1zM17 27h1v1h-1zM20 27h1v1h-1zM22 27h1v1h-1zM25 27h1v1h-1zM30 27h1v1h-1zM31 27h1v1h-1zM33 27h1v1h-1zM34 27h1v1h-1zM35 27h1v1h-1zM36 27h1v1h-1zM4 28h1v1h-1zM7 28h1v1h-1zM10 28h1v1h-1zM11 28h1v1h-1zM12 28h1v1h-1zM13 28h1v1h-1zM16 28h1v1h-1zM20 28h1v1h-1zM21 28h1v1h-1zM23 28h1v1h-1zM24 28h1v1h-1zM26 28h1v1h-1zM27 28h1v1h-1zM28 28h1v1h-1zM29 28h1v1h-1zM30 28h1v1h-1zM31 28h1v1h-1zM32 28h1v1h-1zM12 29h1v1h-1zM17 29h1v1h-1zM18 29h1v1h-1zM20 29h1v1h-1zM21 29h1v1h-1zM22 29h1v1h-1zM23 29h1v1h-1zM24 29h1v1h-1zM27 29h1v1h-1zM28 29h1v1h-1zM32 29h1v1h-1zM34 29h1v1h-1zM36 29h1v1h-1zM4 30h1v1h-1zM5 30h1v1h-1zM6 30h1v1h-1zM7 30h1v1h-1zM8 30h1v1h-1zM9 30h1v1h-1zM10 30h1v1h-1zM14 30h1v1h-1zM17 30h1v1h-1zM18 30h1v1h-1zM19 30h1v1h-1zM20 30h1v1h-1zM21 30h1v1h-1zM24 30h1v1h-1zM25 30h1v1h-1zM27 30h1v1h-1zM28 30h1v1h-1zM30 30h1v1h-1zM32 30h1v1h-1zM34 30h1v1h-1zM35 30h1v1h-1zM4 31h1v1h-1zM10 31h1v1h-1zM12 31h1v1h-1zM13 31h1v1h-1zM17 31h1v1h-1zM18 31h1v1h-1zM19 31h1v1h-1zM21 31h1v1h-1zM22 31h1v1h-1zM23 31h1v1h-1zM25 31h1v1h-1zM26 31h1v1h-1zM27 31h1v1h-1zM28 31h1v1h-1zM32 31h1v1h-1zM33 31h1v1h-1zM34 31h1v1h-1zM36 31h1v1h-1zM4 32h1v1h-1zM6 32h1v1h-1zM7 32h1v1h-1zM8 32h1v1h-1zM10 32h1v1h-1zM12 32h1v1h-1zM13 32h1v1h-1zM16 32h1v1h-1zM17 32h1v1h-1zM20 32h1v1h-1zM26 32h1v1h-1zM28 32h1v1h-1zM29 32h1v1h-1zM30 32h1v1h-1zM31 32h1v1h-1zM32 32h1v1h-1zM33 32h1v1h-1zM35 32h1v1h-1zM36 32h1v1h-1zM4 33h1v1h-1zM6 33h1v1h-1zM7 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM12 33h1v1h-1zM13 33h1v1h-1zM16 33h1v1h-1zM18 33h1v1h-1zM19 33h1v1h-1zM22 33h1v1h-1zM23 33h1v1h-1zM24 33h1v1h-1zM25 33h1v1h-1zM26 33h1v1h-1zM27 33h1v1h-1zM28 33h1v1h-1zM29 33h1v1h-1zM32 33h1v1h-1zM35 33h1v1h-1zM36 33h1v1h-1zM4 34h1v1h-1zM6 34h1v1h-1zM7 34h1v1h-1zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h1v1h-1zM14 34h1v1h-1zM15 34h1v1h-1zM16 34h1v1h-1zM19 34h1v1h-1zM20 34h1v1h-1zM21 34h1v1h-1zM25 34h1v1h-1zM26 34h1v1h-1zM27 34h1v1h-1zM28 34h1v1h-1zM30 34h1v1h-1zM31 34h1v1h-1zM33 34h1v1h-1zM34 34h1v1h-1zM4 35h1v1h-1zM10 35h1v1h-1zM13 35h1v1h-1zM14 35h1v1h-1zM16 35h1v1h-1zM19 35h1v1h-1zM24 35h1v1h-1zM25 35h1v1h-1zM26 35h1v1h-1zM30 35h1v1h-1zM32 35h1v1h-1zM33 35h1v1h-1zM34 35h1v1h-1zM4 36h1v1h-1zM5 36h1v1h-1zM6 36h1v1h-1zM7 36h1v1h-1zM8 36h1v1h-1zM9 36h1v1h-1zM10 36h1v1h-1zM12 36h1v1h-1zM13 36h1v1h-1zM15 36h1v1h-1zM19 36h1v1h-1zM21 36h1v1h-1zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h1v1h-1zM29 36h1v1h-1zM31 36h1v1h-1zM35 36h1v1h-1z" fill="#000"/></svg>';
 function flashBtn(btn,msg){ if(!btn) return; var old=btn.textContent; btn.textContent=msg; btn.disabled=true; setTimeout(function(){ btn.textContent=old; btn.disabled=false; },2400); }
 function copyLink(url,btn){
@@ -437,7 +457,7 @@ function tocHtml(full){
   full.chapters.forEach(function(c){
     var rd=isReadM(full.id,c.n), sn=isSeenM(full.id,c.n), bk=isBookmarked(full.id,c.n);
     var marks=rd?'<span class="tmark rd">✓ Read</span>':(sn?'<span class="tmark sn">Seen</span>':"");
-    h+='<li><div class="tocrow"><a href="#/read/'+full.id+'/'+c.n+'"'+(rd?' class="isread"':"")+'><span class="n">'+(chapLabel(full,c)||"Reading")+'</span>'+esc(c.title||"")+marks+'</a><button type="button" class="tocbm'+(bk?" on":"")+'" data-bm="'+full.id+':'+c.n+'" aria-pressed="'+(bk?"true":"false")+'" aria-label="'+(bk?"Remove bookmark from ":"Bookmark ")+escA(c.title||("Reading "+c.n))+'" title="'+(bk?"Bookmarked — tap to remove":"Bookmark this reading")+'">'+(bk?"🔖 Saved":"🔖")+'</button></div></li>';
+    h+='<li><div class="tocrow"><a href="#/read/'+full.id+'/'+c.n+'"'+(rd?' class="isread"':"")+'><span class="n">'+(chapLabel(full,c)||"Reading")+'</span>'+esc(c.title||"")+marks+'</a><button type="button" class="tocbm'+(bk?" on":"")+'" data-bm="'+full.id+':'+c.n+'" aria-pressed="'+(bk?"true":"false")+'" aria-label="'+(bk?"Remove bookmark from ":"Bookmark ")+escA(c.title||("Reading "+c.n))+'" title="'+(bk?"Bookmarked — tap to remove":"Bookmark this reading")+'">'+(bk?"🔖 Saved":"🔖")+'</button><button type="button" class="tocplay" data-play="'+full.id+':'+c.n+'" aria-label="Listen to '+escA((chapLabel(full,c)||"Reading")+(c.title?": "+c.title:""))+'">▶ Listen</button></div></li>';
   });
   h+='</ol>';
   return h;
@@ -450,6 +470,12 @@ function bindToc(full){
     var f=FULL[id]; var wrap=document.getElementById("tocwrap");
     if(wrap && f){ wrap.innerHTML=tocHtml(f); bindToc(f); }
     refreshDoorProg(id);
+  }); }
+  var pbtns=document.querySelectorAll(".tocplay");
+  for(var pj=0;pj<pbtns.length;pj++){ pbtns[pj].addEventListener("click",function(){
+    var raw=this.getAttribute("data-play"); var cut=raw.lastIndexOf(":"); var pid=raw.slice(0,cut), pn=parseInt(raw.slice(cut+1),10);
+    PENDING_PLAY={id:pid,n:pn};
+    if(location.hash==="#/read/"+pid+"/"+pn){ renderRead(pid,pn); } else { location.hash="#/read/"+pid+"/"+pn; }
   }); }
 }
 function readActionsHtml(){
@@ -673,7 +699,7 @@ function renderReadLoaded(id,num){
   markSeen(id,num);
   var prev=b.chapters[idx-1], next=b.chapters[idx+1];
   var html='<p><a class="backlink" href="#/book/'+b.id+'">← Contents — '+b.title+'</a></p><div class="reader">';
-  html+='<h1>'+b.title+'</h1><p class="chlabel">'+(chapLabel(b,c)?(chapLabel(b,c)+(c.title?" · ":"")):"")+c.title+'</p><div class="body">';
+  html+='<h1>'+b.title+'</h1><p class="chlabel">'+(chapLabel(b,c)?(chapLabel(b,c)+(c.title?" · ":"")):"")+c.title+'</p>'+listenBarHtml()+'<div class="body">';
   c.paras.forEach(function(p,i){
     if(b.numbered){ html+='<p class="verse"><span class="vn">'+(i+1)+'.</span>'+esc(p)+'</p>'; }
     else{ html+='<p>'+esc(p).replace(/\n/g,'<br>')+'</p>'; }
@@ -687,11 +713,13 @@ function renderReadLoaded(id,num){
   document.getElementById("app").innerHTML=html;
   document.getElementById("crumb").textContent=b.title;
   window.scrollTo(0,0);
+  bindListenBar();
+  if(PENDING_PLAY && PENDING_PLAY.id===id && PENDING_PLAY.n===num){ PENDING_PLAY=null; startSpeak(); }
 }
 
 /* ---- reading settings (size, dyslexia-friendly font, theme) — remembered on this device ---- */
-var SET={ts:2,dys:false,theme:"device",palette:"classic",ls:"normal"};
-try{ var saved=JSON.parse(localStorage.getItem("lof-reading-settings")||"null"); if(saved){ if(typeof saved.ts==="number") SET.ts=Math.max(0,Math.min(4,saved.ts)); if(typeof saved.dys==="boolean") SET.dys=saved.dys; if(["device","light","dark","sepia"].indexOf(saved.theme)>-1) SET.theme=saved.theme; if(["classic","parchment","midnight","forest","ocean","burgundy"].indexOf(saved.palette)>-1) SET.palette=saved.palette; if(["compact","normal","relaxed","spacious"].indexOf(saved.ls)>-1) SET.ls=saved.ls; } }catch(e){}
+var SET={ts:2,dys:false,theme:"device",palette:"classic",ls:"normal",voice:""};
+try{ var saved=JSON.parse(localStorage.getItem("lof-reading-settings")||"null"); if(saved){ if(typeof saved.ts==="number") SET.ts=Math.max(0,Math.min(4,saved.ts)); if(typeof saved.dys==="boolean") SET.dys=saved.dys; if(["device","light","dark","sepia"].indexOf(saved.theme)>-1) SET.theme=saved.theme; if(["classic","parchment","midnight","forest","ocean","burgundy"].indexOf(saved.palette)>-1) SET.palette=saved.palette; if(["compact","normal","relaxed","spacious"].indexOf(saved.ls)>-1) SET.ls=saved.ls; if(typeof saved.voice==="string") SET.voice=saved.voice; } }catch(e){}
 var RLH={compact:1.35,normal:1.75,relaxed:1.95,spacious:2.15};
 var RFS=[17,18.5,19.5,21.5,24], RFS_PHONE=[16,17,18.5,20,22.5], AFS=[14.5,15.5,16,17.5,19], TSNAMES=["Small","Comfortable","Medium","Large","Extra large"];
 function saveSettings(){ try{ localStorage.setItem("lof-reading-settings",JSON.stringify(SET)); }catch(e){} }
@@ -711,10 +739,12 @@ function applySettings(){
   var pls=document.querySelectorAll(".pal"); for(var k=0;k<pls.length;k++){ pls[k].classList.toggle("on",pls[k].getAttribute("data-palette-set")===SET.palette); }
   var lss=document.querySelectorAll(".lsp"); for(var m2=0;m2<lss.length;m2++){ lss[m2].classList.toggle("on",lss[m2].getAttribute("data-ls-set")===SET.ls); }
   var sps=document.querySelectorAll(".spd"); for(var j=0;j<sps.length;j++){ sps[j].classList.toggle("on",parseFloat(sps[j].getAttribute("data-rate"))===SPK.rate); }
+  var lsps=document.querySelectorAll(".lspd"); for(var j2=0;j2<lsps.length;j2++){ lsps[j2].classList.toggle("on",parseFloat(lsps[j2].getAttribute("data-lrate"))===SPK.rate); }
 }
 /* ---- listen: read the current reading aloud with the device's speech ---- */
 var CUR=null;
 var SPK={chunks:[],i:0,rate:1,state:"idle"};
+var PENDING_PLAY=null;
 function curParas(){
   if(!CUR) return null;
   var b=FULL[CUR.id]; if(!b) return null;
@@ -738,17 +768,83 @@ function chunkText(paras){
 function pickVoice(){
   try{
     var vs=window.speechSynthesis.getVoices()||[];
-    for(var i=0;i<vs.length;i++){ if(/^en([-_]|$)/i.test(vs[i].lang||"")) return vs[i]; }
+    if(SET.voice){ for(var i=0;i<vs.length;i++){ if(vs[i].voiceURI===SET.voice || vs[i].name===SET.voice) return vs[i]; } }
+    for(var j=0;j<vs.length;j++){ if(/^en([-_]|$)/i.test(vs[j].lang||"")) return vs[j]; }
   }catch(e){}
   return null;
 }
+function populateVoices(){
+  var sels=document.querySelectorAll(".voicesel"); if(!sels.length) return;
+  if(!window.speechSynthesis) return;
+  var vs=[]; try{ vs=window.speechSynthesis.getVoices()||[]; }catch(e){}
+  if(!vs.length) return;
+  var en=vs.filter(function(v){ return /^en([-_]|$)/i.test(v.lang||""); });
+  var list=en.length?en:vs;
+  for(var s=0;s<sels.length;s++){
+    var sel=sels[s];
+    sel.innerHTML="";
+    var def=document.createElement("option"); def.value=""; def.textContent="Automatic"; sel.appendChild(def);
+    list.forEach(function(v){ var o=document.createElement("option"); o.value=v.voiceURI||v.name; o.textContent=v.name+" ("+(v.lang||"")+")"; sel.appendChild(o); });
+    sel.value=SET.voice||"";
+    if(sel.selectedIndex<0) sel.value="";
+  }
+}
 function refreshVoiceNote(){
-  var note=document.getElementById("voiceNote"); if(!note) return;
-  if(window.speechSynthesis && !pickVoice()){ note.classList.remove("hidden"); } else { note.classList.add("hidden"); }
+  var show=false;
+  if(window.speechSynthesis){
+    var vs=[]; try{ vs=window.speechSynthesis.getVoices()||[]; }catch(e){}
+    var hasEn=false; for(var i=0;i<vs.length;i++){ if(/^en([-_]|$)/i.test(vs[i].lang||"")) hasEn=true; }
+    show = vs.length>0 && !hasEn && !SET.voice;
+  }
+  var n1=document.getElementById("voiceNote"); if(n1) n1.classList.toggle("hidden",!show);
+  var n2=document.getElementById("listenVoiceNote"); if(n2) n2.classList.toggle("hidden",!show);
+  populateVoices();
 }
 function setPlayLabel(){
-  var btn=document.getElementById("spkPlay"); if(!btn) return;
-  btn.textContent = SPK.state==="playing" ? "⏸ Pause" : (SPK.state==="paused" ? "▶ Resume" : "▶ Play");
+  var btn=document.getElementById("spkPlay"); if(btn) btn.textContent = SPK.state==="playing" ? "⏸ Pause" : (SPK.state==="paused" ? "▶ Resume" : "▶ Play");
+  var lb=document.getElementById("listenPlay"); if(lb) lb.textContent = SPK.state==="playing" ? "⏸ Pause" : (SPK.state==="paused" ? "▶ Resume" : "▶ Listen");
+  var ls=document.getElementById("listenStop"); if(ls) ls.disabled = SPK.state==="idle";
+  var st=document.getElementById("listenStatus"); if(st) st.textContent = SPK.state==="playing" ? "Reading aloud — tap Pause any time." : (SPK.state==="paused" ? "Paused — tap Resume to keep listening." : "");
+}
+function startSpeak(){
+  if(!window.speechSynthesis) return;
+  var paras=curParas(); if(!paras || !paras.length) return;
+  SPK.chunks=chunkText(paras); SPK.i=0; SPK.state="playing";
+  try{ if(window.speechSynthesis.speaking || window.speechSynthesis.pending || window.speechSynthesis.paused){ window.speechSynthesis.cancel(); } }catch(e){}
+  speakChunk(); setPlayLabel();
+}
+function playPauseSpeak(){
+  if(!window.speechSynthesis) return;
+  if(SPK.state==="playing"){ window.speechSynthesis.pause(); SPK.state="paused"; setPlayLabel(); return; }
+  if(SPK.state==="paused"){ window.speechSynthesis.resume(); SPK.state="playing"; setPlayLabel(); return; }
+  startSpeak();
+}
+function setRate(r){
+  SPK.rate=r;
+  applySettings();
+  if(SPK.state==="playing"||SPK.state==="paused"){ var keep=SPK.i; window.speechSynthesis.cancel(); SPK.i=keep; SPK.state="playing"; speakChunk(); setPlayLabel(); }
+}
+function setVoice(uri){
+  SET.voice=uri; saveSettings();
+  var sels=document.querySelectorAll(".voicesel"); for(var i=0;i<sels.length;i++){ sels[i].value=uri; }
+  refreshVoiceNote();
+  if(SPK.state==="playing"||SPK.state==="paused"){ var keep=SPK.i; window.speechSynthesis.cancel(); SPK.i=keep; SPK.state="playing"; speakChunk(); setPlayLabel(); }
+}
+function listenBarHtml(){
+  if(!window.speechSynthesis){ return '<div class="listenbar"><p class="voicenote" style="margin:0">This device does not offer read-aloud speech.</p></div>'; }
+  var h='<div class="listenbar" id="listenbar">';
+  h+='<div class="listenrow"><button type="button" class="listenplay" id="listenPlay">▶ Listen</button><button type="button" class="listenstop" id="listenStop" disabled>■ Stop</button><span class="listenstatus" id="listenStatus" role="status"></span></div>';
+  h+='<div class="listenrow"><span class="setlab">Speed</span><button type="button" class="lspd" data-lrate="0.75">0.75×</button><button type="button" class="lspd" data-lrate="1">1×</button><button type="button" class="lspd" data-lrate="1.25">1.25×</button><label class="voicelab">Voice <select class="voicesel" id="listenVoice" aria-label="Reading voice"></select></label></div>';
+  h+='<p class="voicenote hidden" id="listenVoiceNote">No English voice was found on this device, so the device default voice will read.</p>';
+  h+='</div>';
+  return h;
+}
+function bindListenBar(){
+  var p=document.getElementById("listenPlay"); if(p) p.addEventListener("click",playPauseSpeak);
+  var s=document.getElementById("listenStop"); if(s) s.addEventListener("click",stopSpeak);
+  var bs=document.querySelectorAll(".lspd"); for(var i=0;i<bs.length;i++){ bs[i].addEventListener("click",function(){ setRate(parseFloat(this.getAttribute("data-lrate"))); }); }
+  var vs=document.getElementById("listenVoice"); if(vs) vs.addEventListener("change",function(){ setVoice(this.value); });
+  populateVoices(); setPlayLabel(); applySettings();
 }
 function speakChunk(){
   if(SPK.i>=SPK.chunks.length){ SPK.state="idle"; SPK.i=0; setPlayLabel(); return; }
@@ -756,7 +852,7 @@ function speakChunk(){
   u.rate=SPK.rate;
   var v=pickVoice(); if(v) u.voice=v;
   u.onend=function(){ if(SPK.state==="playing"){ SPK.i++; speakChunk(); } };
-  u.onerror=function(){ if(SPK.state==="playing"){ SPK.state="idle"; setPlayLabel(); } };
+  u.onerror=function(ev){ if(ev && (ev.error==="interrupted" || ev.error==="canceled")) return; if(SPK.state==="playing"){ SPK.state="idle"; setPlayLabel(); } };
   window.speechSynthesis.speak(u);
 }
 function stopSpeak(){
@@ -769,7 +865,7 @@ function updateListenUI(){
   if(!hint) return;
   if(!window.speechSynthesis){ hint.textContent="This device does not offer read-aloud speech."; play.disabled=true; stop.disabled=true; return; }
   if(CUR){ var b=byId(CUR.id); hint.textContent="Listening to: "+(b?b.title:"")+" — "+CUR.label+"."; play.disabled=false; stop.disabled=false; }
-  else { hint.textContent="Open any reading to listen to it read aloud."; play.disabled=true; stop.disabled=true; }
+  else { hint.textContent="Open any reading and tap Listen at the top of the reading — or tap Listen beside any chapter in a book's contents."; play.disabled=true; stop.disabled=true; }
   refreshVoiceNote();
 }
 function openSettings(){ document.getElementById("setwrap").classList.remove("hidden"); updateListenUI(); }
@@ -778,22 +874,13 @@ document.getElementById("setopen").addEventListener("click",openSettings);
 document.getElementById("setclose").addEventListener("click",closeSettings);
 document.getElementById("setbackdrop").addEventListener("click",closeSettings);
 document.addEventListener("keydown",function(e){ if(e.key==="Escape") closeSettings(); });
-document.getElementById("spkPlay").addEventListener("click",function(){
-  if(!window.speechSynthesis) return;
-  if(SPK.state==="playing"){ window.speechSynthesis.pause(); SPK.state="paused"; setPlayLabel(); return; }
-  if(SPK.state==="paused"){ window.speechSynthesis.resume(); SPK.state="playing"; setPlayLabel(); return; }
-  var paras=curParas(); if(!paras) return;
-  SPK.chunks=chunkText(paras); SPK.i=0; SPK.state="playing";
-  window.speechSynthesis.cancel();
-  speakChunk(); setPlayLabel();
-});
+document.getElementById("spkPlay").addEventListener("click",playPauseSpeak);
 document.getElementById("spkStop").addEventListener("click",stopSpeak);
 var spdBtns=document.querySelectorAll(".spd");
 for(var si=0;si<spdBtns.length;si++){ spdBtns[si].addEventListener("click",function(){
-  SPK.rate=parseFloat(this.getAttribute("data-rate"));
-  applySettings();
-  if(SPK.state==="playing"||SPK.state==="paused"){ var keep=SPK.i; window.speechSynthesis.cancel(); SPK.i=keep; SPK.state="playing"; speakChunk(); setPlayLabel(); }
+  setRate(parseFloat(this.getAttribute("data-rate")));
 });}
+var setVoiceSel=document.getElementById("setVoice"); if(setVoiceSel) setVoiceSel.addEventListener("change",function(){ setVoice(this.value); });
 document.getElementById("txtMinus").addEventListener("click",function(){ if(SET.ts>0){ SET.ts--; saveSettings(); applySettings(); } });
 document.getElementById("txtPlus").addEventListener("click",function(){ if(SET.ts<4){ SET.ts++; saveSettings(); applySettings(); } });
 document.getElementById("dysToggle").addEventListener("change",function(){ SET.dys=this.checked; saveSettings(); applySettings(); });
@@ -815,6 +902,7 @@ document.getElementById("progFile").addEventListener("change",function(){
   r.readAsText(f);
 });
 applySettings();
+populateVoices();
 
 function route(){
   stopSpeak();
